@@ -1,0 +1,25 @@
+<ion-modal-view view-title="Post">
+    <ion-header-bar>
+        <div class="buttons">
+            <button class="button button-clear ion-close" ng-click="closeCreate()"></button>
+        </div>
+        <h1 class="title">Post</h1>
+        <!--<div class="buttons">-->
+        <!--<button class="button button-balanced ng-click="postFeel()">Feel</button>-->
+        <!--</div>-->
+    </ion-header-bar>
+    <ion-content>
+        <form ng-submit="postFeel()">
+            <div class="list">
+                <h4>Dat Feel When...</h4>
+                <label class="item">
+                    <textarea type="text" maxlength="150" style="width: 100%;" ng-model="feelsMessage.msg"></textarea>
+                </label>
+                <!--<label>{{feelsMessage.msg}}</label>-->
+                <label class="item">
+                    <button class="button button-block button-positive" type="submit">Feel</button>
+                </label>
+            </div>
+        </form>
+    </ion-content>
+</ion-modal-view>

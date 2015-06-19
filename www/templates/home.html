@@ -1,0 +1,24 @@
+<ion-view view-title="Home">
+    <ion-nav-bar class="bar-stable">
+        <ion-nav-buttons side="left">
+            <button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
+        </ion-nav-buttons>
+        <ion-nav-buttons side="right">
+            <button ng-if="loggedIn" class="button button-icon button-clear ion-compose" ng-click="Create();"></button>
+        </ion-nav-buttons>
+    </ion-nav-bar>
+    <ion-content>
+        <h3 ng-if="!loggedIn || feels.length === 0" style="text-align: center">No Posts</h3>
+
+        <div class="list">
+            <ion-list>
+                <ion-item ng-if="loggedIn" ng-repeat="feel in feels">
+                    <div style="overflow-wrap: break-word">
+                        <!--<p>{{feel.user}} </p>-->
+                        <p>{{feel.feel}}</p>
+                    </div>
+                </ion-item>
+            </ion-list>
+        </div>
+    </ion-content>
+</ion-view>
