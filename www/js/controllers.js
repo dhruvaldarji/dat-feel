@@ -147,7 +147,11 @@ angular.module('starter.controllers', [])
             $scope.closeCreate();
         }
     })
-
+    .filter('reverse', function() {
+        return function(items) {
+            return items.slice().reverse();
+        };
+    })
     .factory("Feels", function ($firebaseArray) {
         var itemsRef = new Firebase("https://datfeel.firebaseio.com/feels");
         return $firebaseArray(itemsRef);
