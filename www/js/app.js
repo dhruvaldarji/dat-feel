@@ -35,19 +35,11 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers'])
                     }
                 }
             })
-            .state('app.create', {
-                url: "/create",
+            .state('app.account', {
+                url: "/account",
                 views: {
                     'menuContent': {
-                        templateUrl: "templates/create.html"
-                    }
-                }
-            })
-            .state('app.login', {
-                url: "/login",
-                views: {
-                    'menuContent': {
-                        templateUrl: "templates/login.html"
+                        templateUrl: "templates/account.html"
                     }
                 }
             });

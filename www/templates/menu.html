@@ -17,7 +17,7 @@
         </ion-header-bar>
         <ion-content>
             <ion-list>
-                <ion-item menu-close ng-if="!loggedIn" ng-click="login()">
+                <ion-item menu-close ng-hide="loggedIn" ng-click="login()">
                     Login
                 </ion-item>
                 <ion-item menu-close href="#/app/home">
@@ -26,7 +26,10 @@
                 <!--<ion-item menu-close ng-if="loggedIn" href="#/app/create">-->
                     <!--Post-->
                 <!--</ion-item>-->
-                <ion-item menu-close ng-if="loggedIn" ng-click="doLogout()">
+                <ion-item menu-close ng-show="loggedIn" href="#/app/account">
+                    Account
+                </ion-item>
+                <ion-item menu-close ng-show="loggedIn" ng-click="doLogout()">
                     Logout
                 </ion-item>
             </ion-list>

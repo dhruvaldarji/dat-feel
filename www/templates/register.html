@@ -1,0 +1,34 @@
+<ion-modal-view view-title="Register">
+    <ion-header-bar>
+        <h1 class="title">Register</h1>
+    </ion-header-bar>
+    <ion-content>
+        <form>
+            <div class="list">
+                <label class="item item-input" ng-required="registerData.firstname">
+                    <span class="input-label">First Name:</span>
+                    <input type="text" ng-model="registerData.firstName">
+                </label>
+                <label class="item item-input" ng-required="registerData.lastname">
+                    <span class="input-label">Last Name: </span>
+                    <input type="text" ng-model="registerData.lastName">
+                </label>
+                <label class="item item-input" ng-required="registerData.username">
+                    <span class="input-label">E-Mail: </span>
+                    <input type="text" ng-model="registerData.username">
+                </label>
+                <label class="item item-input" ng-required="registerData.password">
+                    <span class="input-label">Password: </span>
+                    <input type="password" ng-model="registerData.password">
+                </label>
+                <label class="item">
+                    <button class="button button-block button-positive" ng-click="doRegister()">Register</button>
+                </label>
+                <label class="item" style="text-align: center">OR</label>
+                <label class="item">
+                    <button class="button button-block button-calm" ng-click="login()">Log in</button>
+                </label>
+            </div>
+        </form>
+    </ion-content>
+</ion-modal-view>

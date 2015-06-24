@@ -13,6 +13,13 @@ angular.module('starter.controllers', [])
             password: ""
         };
 
+        $scope.registerData = {
+            username: "",
+            password: "",
+            firstname: "",
+            lastname: "",
+        };
+
         //var FirebaseTokenGenerator = require("./firebase-token-generator-node.js");
         //var tokenGenerator = new FirebaseTokenGenerator("RHpXfUPsJX53UdV2sXk7yEe9Ebmcq89dtVkH9KEy");
 
@@ -20,7 +27,11 @@ angular.module('starter.controllers', [])
 
         $scope.currentUser = {};
 
-        $scope.feelsMessage = {msg: ""};
+        $scope.feelsMessage = {
+            msg: "",
+            user: "",
+            date: "",
+        };
 
         // Create the login modal that we will use later
         $ionicModal.fromTemplateUrl('templates/login.html', {
@@ -37,6 +48,7 @@ angular.module('starter.controllers', [])
         // Open the login modal
         $scope.login = function () {
             $scope.loginModal.show();
+            $scope.closeRegister();
         };
 
         var ref = new Firebase("https://datfeel.firebaseio.com");
@@ -66,6 +78,10 @@ angular.module('starter.controllers', [])
             // code if using a login system
             $timeout(function () {
                 $scope.loading = false;
+                $scope.loginData = {
+                    username: "",
+                    password: ""
+                };
                 $scope.closeLogin();
             }, 1000);
         };
@@ -84,26 +100,60 @@ angular.module('starter.controllers', [])
             }, 1000);
         };
 
+        // Create the login modal that we will use later
+        $ionicModal.fromTemplateUrl('templates/register.html', {
+            scope: $scope
+        }).then(function (modal) {
+            $scope.registerModal = modal;
+        });
+
+        // Triggered in the login modal to close it
+        $scope.closeRegister = function () {
+            $scope.registerModal.hide();
+        };
+
+        // Open the login modal
+        $scope.register = function () {
+            $scope.registerModal.show();
+            $scope.closeLogin();
+        };
+
         // Perform the register action when the user submits the register form
         // Reference:     https://www.firebase.com/docs/web/guide/login/password.html
         $scope.doRegister = function () {
-            console.log('Registering', $scope.loginData);
+            console.log('Registering', $scope.registerData);
             $scope.loading = true;
             ref.createUser({
-                email: $scope.loginData.username,
-                password: $scope.loginData.password
-            }, function (error, userData) {
+                email: $scope.registerData.username,
+                password: $scope.registerData.password,
+            }, function(error, userData) {
                 if (error) {
-                    console.log("Error creating user:", error);
+                    switch (error.code) {
+                        case "EMAIL_TAKEN":
+                            console.log("The new user account cannot be created because the email is already in use.");
+                            break;
+                        case "INVALID_EMAIL":
+                            console.log("The specified email is not a valid email.");
+                            break;
+                        default:
+                            console.log("Error creating user:", error);
+                    }
                 } else {
-                    console.log("Successfully created user account with username:", userData.password.email);
+                    remember: "sessionOnly";
+                    console.log("Successfully created user account with uid:", userData.uid, "and email", userData.password.email);
                 }
             });
+
+
 
             // Simulate a login delay. Remove this and replace with your login
             // code if using a login system
             $timeout(function () {
                 $scope.loading = false;
+                $scope.registerData = {
+                    username: "",
+                    password: ""
+                };
                 $scope.closeLogin();
             }, 1000);
         };
@@ -135,16 +185,50 @@ angular.module('starter.controllers', [])
 
         $scope.postFeel = function () {
             // Post message using user, message, and time.
-            console.log("Posting: DFW " + $scope.feelsMessage.msg);
             var PostFeelMessage = "DFW " + $scope.feelsMessage.msg;
+            var date = new Date();
+            console.log("Posting: "+ PostFeelMessage+ " on "+ date);
             if ($scope.loggedIn && PostFeelMessage) {
                 $scope.feels.$add({
                     "user": $scope.currentUser,
+                    "date": date.toDateString(),
                     "feel": PostFeelMessage,
                 });
             }
             $scope.feelsMessage.msg = "";
             $scope.closeCreate();
+        }
+
+        $scope.deleteFeel = function(id){
+            var num = $scope.feels.length-id-1;
+            var userDeleting = $scope.feels[num].user;
+            if($scope.currentUser === userDeleting){
+                console.log("User: "+userDeleting+", is deleting DFW "+num+".");
+                $scope.feels.$remove(num);
+            }
+            else {
+                console.log("User: "+$scope.currentUser+" does not have permission to delete DFW "+num+".");
+            }
+        }
+
+        $scope.feelingItUp = function(id){
+            var num = $scope.feels.length-id-1;
+            console.log("User: "+$scope.currentUser+", is feeling up DFW #"+num+".");
+            alert("User: "+$scope.currentUser+" is feeling up DFW #"+num+".");
+        }
+
+        $scope.commentFeel = function(id){
+            var num = $scope.feels.length-id-1;
+            console.log("User: "+$scope.currentUser+", is commenting on DFW #"+num+".");
+            alert("User: "+$scope.currentUser+" is commenting on DFW #"+num+".");
+
+        }
+
+        $scope.shareFeel = function(id){
+            var num = $scope.feels.length-id-1;
+            console.log("User: "+$scope.currentUser+", is sharing DFW #"+num+".");
+            alert("User: "+$scope.currentUser+" is sharing DFW #"+num+".");
+
         }
     })
     .filter('reverse', function() {

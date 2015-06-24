@@ -1,1 +1,20 @@
 /* Empty. Add your own CSS if you like */
+.message_list {
+    /*margin: 0 10px;*/
+    padding: 0 10px;
+}
+
+/*.message_item {*/
+    /*margin: 0 10px;*/
+    /*padding: 0 10px;*/
+/*}*/
+
+.card {
+    margin: 0 10px;
+    padding: 0 10px;
+}
+
+.list:last-child.card {
+    margin: 0 10px;
+    padding: 0 10px;
+}
