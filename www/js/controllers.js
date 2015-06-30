@@ -254,31 +254,33 @@ angular.module('starter.controllers', [])
         }
 
         $scope.feelingItUp = function(id){
-            var num = $scope.feels.length-id-1;
             //console.log("User: "+$scope.currentUser+", is feeling up DFW #"+num+".");
             //alert("User: "+$scope.currentUser+" is feeling up DFW #"+num+".");
             var add = true;
+            var num = $scope.feels.length-id-1;
             var currentFeel = $scope.feels[num];
-            if(typeof(currentFeel) !== 'undefined' && currentFeel.feltBy.length){
+            if((typeof(currentFeel) !== 'undefined') && (currentFeel.feltBy)){
                 var numFelt = currentFeel.feltBy.length;
                 console.log("The feel has "+numFelt+" feel(s).")
                 for(var i = 0; i < numFelt; i++){
                     if(currentFeel.feltBy[i] === $scope.currentUser) {
-                        alert("User: "+$scope.currentUser+" has already felt up DFW #"+num+".");
+                        //alert("User: "+$scope.currentUser+" has already felt up DFW #"+num+".");
+                        //if incorporating unliking feels ...
                         //currentFeel.feltBy.splice(i,1,$scope.currentUser );
                         add = false;
                     }
                 }
                 if(add){
                     currentFeel.feltBy.push($scope.currentUser);
-                    alert("User: "+$scope.currentUser+" is feeling up DFW #"+num+".");
+                    $scope.feels.$save(num);
+                    //alert("User: "+$scope.currentUser+" is feeling up DFW #"+num+".");
                 }
             }
             else {
-                $scope.feels[num].feltBy = [$scope.currentUser];
-                alert("User: "+$scope.currentUser+" is feeling up DFW #"+num+". Feel was undefined, user was added.");
+               currentFeel.feltBy = [$scope.currentUser];
+                $scope.feels.$save(num);
+                //alert("User: "+$scope.currentUser+" is feeling up DFW #"+num+". Feel was undefined, user was added.");
             }
-            $scope.feels.$save(num);
         }
 
         $scope.commentFeel = function(id){
