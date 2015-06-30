@@ -224,7 +224,7 @@ angular.module('starter.controllers', [])
                     "user": $scope.currentUser,
                     "date": date.toDateString(),
                     "feel": PostFeelMessage,
-                    "feltBy": [$scope.currentUser],
+                    "feltBy": [],
                     "comments": []
                 });
             }
