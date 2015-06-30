@@ -7,8 +7,8 @@
             <button ng-if="loggedIn" class="button button-icon button-clear ion-compose" ng-click="Create();"></button>
         </ion-nav-buttons>
     </ion-nav-bar>
-    <ion-content>
-        <div class="card" ng-if="!loggedIn || feels.length === 0">
+    <ion-content [ion-refresher="true"]>
+        <div class="card" ng-hide="loggedIn" ng-show="feels.length === 0">
             <div class="item">
                 <h2>System:</h2>
             </div>
@@ -32,8 +32,8 @@
                         </div>
                         <div class="item tabs tabs-secondary tabs-icon-left">
                             <a class="tab-item" ng-click="feelingItUp(id)">
-                                <i class="icon ion-heart">{{feel.feelsNum}}</i>
-                                Feel
+                                <i class="icon ion-heart"></i>
+                                {{feel.feltBy.length}} Feel
                             </a>
                             <a class="tab-item" ng-click="commentFeel(id)">
                                 <i class="icon ion-chatbox"></i>

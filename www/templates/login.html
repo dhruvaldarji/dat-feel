@@ -13,6 +13,7 @@
                     <span class="input-label">Password: </span>
                     <input type="password" ng-model="loginData.password">
                 </label>
+                <ion-checkbox ng-model="loginData.remember" data-value="loginData.remember">Remember</ion-checkbox>
                 <label class="item">
                     <button class="button button-block button-positive" ng-click="doLogin()">Log in</button>
                 </label>
