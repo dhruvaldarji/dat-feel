@@ -33,7 +33,7 @@ angular.module('starter.controllers', [])
             comments: []
         };
 
-        var ref = new Firebase("https://datfeel.firebaseio.com");
+        var ref = new Firebase("https://datfeel.firebaseio.com/");
 
         $scope.$on('app.loggedOut', function(e) {
             // Show the modal here
@@ -258,26 +258,27 @@ angular.module('starter.controllers', [])
             //console.log("User: "+$scope.currentUser+", is feeling up DFW #"+num+".");
             //alert("User: "+$scope.currentUser+" is feeling up DFW #"+num+".");
             var add = true;
-            if(typeof($scope.feels[num].feltBy) !== 'undefined' && $scope.feels[num].feltBy.length){
-                var currentFeel = $scope.feels[num];
+            var currentFeel = $scope.feels[num];
+            if(typeof(currentFeel) !== 'undefined' && currentFeel.feltBy.length){
                 var numFelt = currentFeel.feltBy.length;
-                console.log("The feel has "+numFelt+" feels.")
+                console.log("The feel has "+numFelt+" feel(s).")
                 for(var i = 0; i < numFelt; i++){
                     if(currentFeel.feltBy[i] === $scope.currentUser) {
-                        //alert("User: "+$scope.currentUser+" has already felt up DFW #"+num+".");
-                        currentFeel.feltBy.splice(i,1,$scope.currentUser );
+                        alert("User: "+$scope.currentUser+" has already felt up DFW #"+num+".");
+                        //currentFeel.feltBy.splice(i,1,$scope.currentUser );
                         add = false;
                     }
                 }
                 if(add){
-                    $scope.feels[num].feltBy.push($scope.currentUser);
-                    //alert("User: "+$scope.currentUser+" is feeling up DFW #"+num+".");
+                    currentFeel.feltBy.push($scope.currentUser);
+                    alert("User: "+$scope.currentUser+" is feeling up DFW #"+num+".");
                 }
             }
             else {
                 $scope.feels[num].feltBy = [$scope.currentUser];
-                //alert("User: "+$scope.currentUser+" is feeling up DFW #"+num+".");
+                alert("User: "+$scope.currentUser+" is feeling up DFW #"+num+". Feel was undefined, user was added.");
             }
+            $scope.feels.$save(num);
         }
 
         $scope.commentFeel = function(id){
@@ -302,38 +303,6 @@ angular.module('starter.controllers', [])
     .factory("Feels", function ($firebaseArray) {
         var itemsRef = new Firebase("https://datfeel.firebaseio.com/feels");
         //console.log("Data", itemsRef);
-
-        function syncChanges(list, ref) {
-
-            ref.on('child_added', function _add(snap, prevChild) {
-                var data = snap.val();
-                data.$id = snap.key(); // assumes data is always an object
-                var pos = positionAfter(list, prevChild);
-                list.splice(pos, 0, data);
-            });
-
-            ref.on('child_removed', function _remove(snap) {
-                var i = positionFor(list, snap.key());
-                if( i > -1 ) {
-                    list.splice(i, 1);
-                }
-            });
-            ref.on('child_changed', function _change(snap) {
-                var i = positionFor(list, snap.key());
-                if( i > -1 ) {
-                    list[i] = snap.val();
-                    list[i].$id = snap.key(); // assumes data is always an object
-                }
-            });
-            ref.on('child_moved', function _move(snap, prevChild) {
-                var curPos = positionFor(list, snap.key());
-                if( curPos > -1 ) {
-                    var data = list.splice(curPos, 1)[0];
-                    var newPos = positionAfter(list, prevChild);
-                    list.splice(newPos, 0, data);
-                }
-            });
-        }
 
         return $firebaseArray(itemsRef);
     })
