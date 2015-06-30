@@ -1,5 +1,5 @@
 angular.module('starter.controllers', [])
-    .controller('AppCtrl', function ($scope, $state, $ionicModal, $localstorage, $timeout, Feels, Auth) {
+    .controller('AppCtrl', function ($scope, $state, $ionicModal, $localstorage, $timeout, Feels, Root) {
         // With the new view caching in Ionic, Controllers are only called
         // when they are recreated or on app start, instead of every page change.
         // To listen for when this page is active (for example, to refresh data),
@@ -33,21 +33,19 @@ angular.module('starter.controllers', [])
             comments: []
         };
 
-        var ref = new Firebase("https://datfeel.firebaseio.com/");
+        var ref = new Firebase("https://datfeel.firebaseio.com");
 
         $scope.$on('app.loggedOut', function(e) {
             // Show the modal here
         });
 
-        Auth.checkLogin();
-
-        $scope.$on('$ionicView.enter', function(e){
-            if(!$scope.loggedIn){
+        $scope.homeInit = function() {
+            if (!$scope.loggedIn) {
                 console.log("No one is logged in, checking local storage.");
 
                 var loginInfo = $localstorage.getObject('loginData').loginData;
                 console.log("Localstorage: ", loginInfo);
-                if($scope.loginData.remember === false){
+                if ($scope.loginData.remember === false) {
                     console.log("No login is saved, please login with email and password.");
                     $scope.loginData = {};
                 }
@@ -56,28 +54,24 @@ angular.module('starter.controllers', [])
                     $scope.loginData.password = loginInfo.password;
                     $scope.loginData.remember = loginInfo.remember;
                 }
-                $scope.login();
             }
-        });
+        };
 
         // Create the login modal that we will use later
         $ionicModal.fromTemplateUrl('templates/login.html', {
-            scope: $scope
-        }).then(function (modal) {
+            scope: $scope,
+            animation: 'slide-in-up'
+        }).then(function(modal) {
             $scope.loginModal = modal;
+            $scope.login();
         });
 
-        // Triggered in the login modal to close it
-        $scope.closeLogin = function () {
-            $scope.loginModal.hide();
+        $scope.login = function() {
+            $scope.loginModal.show();
         };
 
-        // Open the login modal
-        $scope.login = function () {
-            $scope.loginModal.show();
-            if($scope.registerModal){
-                $scope.closeRegister();
-            }
+        $scope.closeLogin = function() {
+            $scope.loginModal.hide();
         };
 
         // Perform the login action when the user submits the login form
@@ -139,23 +133,29 @@ angular.module('starter.controllers', [])
 
         // Create the login modal that we will use later
         $ionicModal.fromTemplateUrl('templates/register.html', {
-            scope: $scope
-        }).then(function (modal) {
+            scope: $scope,
+            animation: 'slide-in-up'
+        }).then(function(modal) {
             $scope.registerModal = modal;
         });
 
-        // Triggered in the login modal to close it
-        $scope.closeRegister = function () {
+        $scope.register = function() {
+            $scope.registerModal.show();
+        };
+
+        $scope.closeRegister = function() {
             $scope.registerModal.hide();
         };
 
-        // Open the login modal
-        $scope.register = function () {
-            $scope.registerModal.show();
-            if($scope.registerModal){
-                $scope.closeLogin();
-            }
-        };
+        $scope.goToRegister = function(){
+            $scope.register();
+            $scope.closeLogin();
+        }
+
+        $scope.goToLogin = function(){
+            $scope.login();
+            $scope.closeRegister();
+        }
 
         // Perform the register action when the user submits the register form
         // Reference:     https://www.firebase.com/docs/web/guide/login/password.html
@@ -259,21 +259,28 @@ angular.module('starter.controllers', [])
             var add = true;
             var num = $scope.feels.length-id-1;
             var currentFeel = $scope.feels[num];
+            var currentUserNum = -1;
             if((typeof(currentFeel) !== 'undefined') && (currentFeel.feltBy)){
                 var numFelt = currentFeel.feltBy.length;
                 console.log("The feel has "+numFelt+" feel(s).")
                 for(var i = 0; i < numFelt; i++){
                     if(currentFeel.feltBy[i] === $scope.currentUser) {
-                        //alert("User: "+$scope.currentUser+" has already felt up DFW #"+num+".");
-                        //if incorporating unliking feels ...
-                        //currentFeel.feltBy.splice(i,1,$scope.currentUser );
                         add = false;
+                        currentUserNum = i;
                     }
                 }
                 if(add){
                     currentFeel.feltBy.push($scope.currentUser);
                     $scope.feels.$save(num);
                     //alert("User: "+$scope.currentUser+" is feeling up DFW #"+num+".");
+                }
+                else{
+                    //alert("User: "+$scope.currentUser+" has already felt up DFW #"+num+".");
+                    //alert("User: "+$scope.currentUser+" is unfeeling DFW #"+num+".");
+                    if(currentUserNum > -1){
+                        currentFeel.feltBy.splice(currentUserNum,1);
+                        $scope.feels.$save(num);
+                    }
                 }
             }
             else {
@@ -305,7 +312,6 @@ angular.module('starter.controllers', [])
     .factory("Feels", function ($firebaseArray) {
         var itemsRef = new Firebase("https://datfeel.firebaseio.com/feels");
         //console.log("Data", itemsRef);
-
         return $firebaseArray(itemsRef);
     })
     .factory("Auth", function ($firebaseAuth) {
@@ -328,7 +334,7 @@ angular.module('starter.controllers', [])
             }
         }}
     ])
-    .factory('Auth', function($rootScope) {
+    .factory('Root', function($rootScope) {
         return {
             checkLogin: function() {
                 // Check if logged in and fire events

@@ -1,4 +1,4 @@
-<ion-view view-title="Home">
+<ion-view view-title="Home" ng-init="homeInit()">
     <ion-nav-bar class="bar-stable">
         <ion-nav-buttons side="left">
             <button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
@@ -8,7 +8,7 @@
         </ion-nav-buttons>
     </ion-nav-bar>
     <ion-content [ion-refresher="true"]>
-        <div class="card" ng-hide="loggedIn" ng-show="feels.length === 0">
+        <div class="card" ng-hide="loggedIn" >
             <div class="item">
                 <h2>System:</h2>
             </div>
