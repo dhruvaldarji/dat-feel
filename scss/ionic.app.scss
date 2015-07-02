@@ -38,6 +38,9 @@ ion-content{
 .item{
   padding-bottom:0;
   background-color: #F4DFFF;
+  p{
+    color:#222;
+  }
 
 }
 .color{
@@ -66,4 +69,5 @@ ion-content{
   font-size: .7em;
   font-weight: 300;
   font-style: italic;
+  color: #666;
 }
