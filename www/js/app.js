@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'firebase', 'starter.controllers'])
+angular.module('starter', ['ionic', 'firebase', 'ngCordova', 'ionic.service.core', 'ionic.service.push','starter.controllers'])
 
     .run(function ($ionicPlatform) {
         $ionicPlatform.ready(function () {
@@ -19,6 +19,17 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers'])
             }
         });
     })
+    .config(['$ionicAppProvider', function($ionicAppProvider) {
+        // Identify app
+        $ionicAppProvider.identify({
+            // The App ID (from apps.ionic.io) for the server
+            app_id: '45ec6dc0',
+            // The public API key all services will use for this app
+            api_key: '23388e70ab4483be754cf84fe8220d9e49baa88c48f5dad4',
+            // Set the app to use development pushes
+            dev_push: true
+        });
+    }])
     .config(function ($stateProvider, $urlRouterProvider) {
         $stateProvider
             .state('app', {

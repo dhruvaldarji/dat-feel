@@ -7,8 +7,8 @@
             <button ng-if="loggedIn" class="button button-icon button-clear ion-compose" ng-click="Create();"></button>
         </ion-nav-buttons>
     </ion-nav-bar>
-    <ion-content [ion-refresher="true"]>
-        <div class="card" ng-hide="loggedIn" >
+    <ion-content [ion-refresher="true" ]>
+        <div class="card" ng-hide="loggedIn">
             <div class="item">
                 <h2>System:</h2>
             </div>
@@ -16,16 +16,27 @@
                 <p>No Posts, go make one.</p>
             </div>
         </div>
+        <!--Testing Push-->
+        <!--<button class="button button-block button-dark" ng-click="identifyUser()">-->
+            <!--Identify a user-->
+        <!--</button>-->
+        <!--<button class="button button-block button-positive" ng-if="identified" ng-click="pushRegister()">-->
+            <!--Register for Push-->
+        <!--</button>-->
         <div class="list">
             <ion-list class="message_list">
                 <ion-item class="message_item" ng-if="loggedIn" ng-repeat="(id, feel) in feels | reverse">
                     <div class="list card">
                         <div class="item item-avatar item-icon-right">
                             <img src="./img/ionic.png">
+
                             <h2>{{feel.user}}</h2>
+
                             <p ng-show="feel.date">{{feel.date}}</p>
+
                             <p ng-hide="feel.date">No Date Data</p>
-                            <i class="icon ion-trash-b" ng-show="currentUser === feel.user" ng-click="deleteFeel(id)"></i>
+                            <i class="icon ion-trash-b" ng-show="currentUser === feel.user"
+                               ng-click="deleteFeel(id)"></i>
                         </div>
                         <div class="item item-text-wrap">
                             <p>{{feel.feel}}</p>
@@ -35,14 +46,14 @@
                                 <i class="icon ion-heart"></i>
                                 {{feel.feltBy.length}} Feel
                             </a>
-                            <a class="tab-item" ng-click="commentFeel(id)">
-                                <i class="icon ion-chatbox"></i>
-                                Comment
-                            </a>
-                            <a class="tab-item" ng-click="shareFeel(id)">
-                                <i class="icon ion-share"></i>
-                                Share
-                            </a>
+                            <!--<a class="tab-item" ng-click="commentFeel(id)">-->
+                            <!--<i class="icon ion-chatbox"></i>-->
+                            <!--Comment-->
+                            <!--</a>-->
+                            <!--<a class="tab-item" ng-click="shareFeel(id)">-->
+                            <!--<i class="icon ion-share"></i>-->
+                            <!--Share-->
+                            <!--</a>-->
                         </div>
                     </div>
                 </ion-item>

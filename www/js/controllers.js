@@ -1,14 +1,12 @@
 angular.module('starter.controllers', [])
-    .controller('AppCtrl', function ($scope, $state, $ionicModal, $localstorage, $timeout, Feels, Root) {
-        // With the new view caching in Ionic, Controllers are only called
-        // when they are recreated or on app start, instead of every page change.
-        // To listen for when this page is active (for example, to refresh data),
-        // listen for the $ionicView.enter event:
+    .controller('AppCtrl', function ($scope, $state, $ionicModal, $timeout,
+                                     $localstorage, Feels, $rootScope, $ionicUser, $ionicPush) {
 
         // Form data for the login modal
         $scope.loginData = {
             username: "",
-            password: ""
+            password: "",
+            remember: false
         };
 
         $scope.registerData = {
@@ -37,6 +35,7 @@ angular.module('starter.controllers', [])
 
         $scope.$on('app.loggedOut', function(e) {
             // Show the modal here
+            $scope.login();
         });
 
         $scope.homeInit = function() {
@@ -45,9 +44,13 @@ angular.module('starter.controllers', [])
 
                 var loginInfo = $localstorage.getObject('loginData').loginData;
                 console.log("Localstorage: ", loginInfo);
-                if ($scope.loginData.remember === false) {
+                if ($scope.loginData.remember === undefined) {
                     console.log("No login is saved, please login with email and password.");
-                    $scope.loginData = {};
+                    $scope.loginData = {
+                        username: "",
+                        password: "",
+                        remember: false
+                    };
                 }
                 else {
                     $scope.loginData.username = loginInfo.username;
@@ -113,6 +116,13 @@ angular.module('starter.controllers', [])
                         loginData: $scope.loginData
                     });
                 }
+
+                // Identify user for Pushes
+                $scope.identifyUser();
+
+                // Register user for Pushes
+                $scope.pushRegister();
+
                 $scope.closeLogin();
             }, 1000);
         };
@@ -127,7 +137,7 @@ angular.module('starter.controllers', [])
             // code if using a login system
             $timeout(function () {
                 $scope.loading = false;
-                $scope.closeLogin();
+                $scope.login();
             }, 1000);
         };
 
@@ -158,7 +168,6 @@ angular.module('starter.controllers', [])
         }
 
         // Perform the register action when the user submits the register form
-        // Reference:     https://www.firebase.com/docs/web/guide/login/password.html
         $scope.doRegister = function () {
             console.log('Registering', $scope.registerData);
             $scope.loading = true;
@@ -204,6 +213,55 @@ angular.module('starter.controllers', [])
             $scope.createModal = modal;
         });
 
+        // Handles incoming device tokens
+        $rootScope.$on('$cordovaPush:tokenReceived', function(event, data) {
+            alert("Successfully registered token " + data.token);
+            console.log('Ionic Push: Got token ', data.token, data.platform);
+            $scope.token = data.token;
+        });
+
+        // Identifies a user with the Ionic User service
+        $scope.identifyUser = function() {
+            console.log('Ionic User: Identifying with Ionic User service');
+
+            var user = $ionicUser.get();
+            if(!user.user_id) {
+                // Set your user_id here, or generate a random one.
+                user.user_id = $ionicUser.generateGUID();
+            };
+
+            // Add some metadata to your user object.
+            angular.extend(user, {
+                name: $scope.currentUser.username,
+                bio: 'I like to use DatFeel to post Feels.'
+            });
+
+            // Identify your user with the Ionic User Service
+            $ionicUser.identify(user).then(function(){
+                $scope.identified = true;
+                alert('Identified user ' + user.name + '\n ID ' + user.user_id);
+            });
+        };
+
+        // Registers a device for push notifications and stores its token
+        $scope.pushRegister = function() {
+            console.log('Ionic Push: Registering user');
+
+            // Register with the Ionic Push service.  All parameters are optional.
+            $ionicPush.register({
+                canShowAlert: true, //Can pushes show an alert on your screen?
+                canSetBadge: true, //Can pushes update app icon badges?
+                canPlaySound: true, //Can notifications play a sound?
+                canRunActionsOnWake: true, //Can run actions outside the app,
+                onNotification: function(notification) {
+                    // Handle new push notifications here
+                     console.log(notification);
+
+                    return true;
+                }
+            });
+        };
+
         // Triggered in the login modal to close it
         $scope.closeCreate = function () {
             $scope.createModal.hide();
@@ -214,6 +272,7 @@ angular.module('starter.controllers', [])
             $scope.createModal.show();
         };
 
+        // Post a feel to the DB
         $scope.postFeel = function () {
             // Post message using user, message, and time.
             var PostFeelMessage = "DFW " + $scope.feelsMessage.msg;
@@ -235,9 +294,11 @@ angular.module('starter.controllers', [])
                 feltBy: [],
                 comments: []
             };
+
             $scope.closeCreate();
         }
 
+        // Delete a feel from the DB
         $scope.deleteFeel = function(id){
             var num = $scope.feels.length-id-1;
             var userDeleting = $scope.feels[num].user;
@@ -253,6 +314,7 @@ angular.module('starter.controllers', [])
             }
         }
 
+        // Feeling a feel (liking) (hearts)
         $scope.feelingItUp = function(id){
             //console.log("User: "+$scope.currentUser+", is feeling up DFW #"+num+".");
             //alert("User: "+$scope.currentUser+" is feeling up DFW #"+num+".");
@@ -290,19 +352,21 @@ angular.module('starter.controllers', [])
             }
         }
 
-        $scope.commentFeel = function(id){
-            var num = $scope.feels.length-id-1;
-            console.log("User: "+$scope.currentUser+", is commenting on DFW #"+num+".");
-            alert("User: "+$scope.currentUser+" is commenting on DFW #"+num+".");
+        // Commenting a feel
+        //$scope.commentFeel = function(id){
+        //    var num = $scope.feels.length-id-1;
+        //    console.log("User: "+$scope.currentUser+", is commenting on DFW #"+num+".");
+        //    alert("User: "+$scope.currentUser+" is commenting on DFW #"+num+".");
+        //
+        //}
 
-        }
-
-        $scope.shareFeel = function(id){
-            var num = $scope.feels.length-id-1;
-            console.log("User: "+$scope.currentUser+", is sharing DFW #"+num+".");
-            alert("User: "+$scope.currentUser+" is sharing DFW #"+num+".");
-
-        }
+        // Sharing a feel
+        //$scope.shareFeel = function(id){
+        //    var num = $scope.feels.length-id-1;
+        //    console.log("User: "+$scope.currentUser+", is sharing DFW #"+num+".");
+        //    alert("User: "+$scope.currentUser+" is sharing DFW #"+num+".");
+        //
+        //}
     })
     .filter('reverse', function() {
         return function(items) {
