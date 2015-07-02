@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
     .controller('AppCtrl', function ($scope, $state, $ionicModal, $timeout,
-                                     $localstorage, Feels, $rootScope, $ionicUser, $ionicPush) {
+                                     $localstorage, Feels, Users, $rootScope, $ionicUser, $ionicPush, $http) {
 
         // Form data for the login modal
         $scope.loginData = {
@@ -21,6 +21,8 @@ angular.module('starter.controllers', [])
 
         $scope.feels = Feels;
 
+        $scope.users = Users;
+
         $scope.currentUser = {};
 
         $scope.feelsMessage = {
@@ -33,12 +35,12 @@ angular.module('starter.controllers', [])
 
         var ref = new Firebase("https://datfeel.firebaseio.com");
 
-        $scope.$on('app.loggedOut', function(e) {
+        $scope.$on('app.loggedOut', function (e) {
             // Show the modal here
             $scope.login();
         });
 
-        $scope.homeInit = function() {
+        $scope.homeInit = function () {
             if (!$scope.loggedIn) {
                 console.log("No one is logged in, checking local storage.");
 
@@ -64,16 +66,16 @@ angular.module('starter.controllers', [])
         $ionicModal.fromTemplateUrl('templates/login.html', {
             scope: $scope,
             animation: 'slide-in-up'
-        }).then(function(modal) {
+        }).then(function (modal) {
             $scope.loginModal = modal;
             $scope.login();
         });
 
-        $scope.login = function() {
+        $scope.login = function () {
             $scope.loginModal.show();
         };
 
-        $scope.closeLogin = function() {
+        $scope.closeLogin = function () {
             $scope.loginModal.hide();
         };
 
@@ -101,12 +103,12 @@ angular.module('starter.controllers', [])
             // code if using a login system
             $timeout(function () {
                 $scope.loading = false;
-                if($scope.loginData.remember){
+                if ($scope.loginData.remember) {
                     $localstorage.setObject('loginData', {
                         loginData: $scope.loginData
                     });
                 }
-                else{
+                else {
                     $scope.loginData = {
                         username: "",
                         password: "",
@@ -145,24 +147,24 @@ angular.module('starter.controllers', [])
         $ionicModal.fromTemplateUrl('templates/register.html', {
             scope: $scope,
             animation: 'slide-in-up'
-        }).then(function(modal) {
+        }).then(function (modal) {
             $scope.registerModal = modal;
         });
 
-        $scope.register = function() {
+        $scope.register = function () {
             $scope.registerModal.show();
         };
 
-        $scope.closeRegister = function() {
+        $scope.closeRegister = function () {
             $scope.registerModal.hide();
         };
 
-        $scope.goToRegister = function(){
+        $scope.goToRegister = function () {
             $scope.register();
             $scope.closeLogin();
         }
 
-        $scope.goToLogin = function(){
+        $scope.goToLogin = function () {
             $scope.login();
             $scope.closeRegister();
         }
@@ -174,7 +176,7 @@ angular.module('starter.controllers', [])
             ref.createUser({
                 email: $scope.registerData.username,
                 password: $scope.registerData.password,
-            }, function(error, userData) {
+            }, function (error, userData) {
                 if (error) {
                     switch (error.code) {
                         case "EMAIL_TAKEN":
@@ -214,21 +216,51 @@ angular.module('starter.controllers', [])
         });
 
         // Handles incoming device tokens
-        $rootScope.$on('$cordovaPush:tokenReceived', function(event, data) {
-            //alert("Successfully registered token " + data.token);
+        $rootScope.$on('$cordovaPush:tokenReceived', function (event, data) {
+            //alert("Successfully registered token " + data.pushToken);
             console.log('Ionic Push: Got token ', data.token, data.platform);
-            $scope.token = data.token;
+            $scope.pushToken = data.token;
+            $scope.pushPlatform = data.platform;
+
+            console.log("Searching for user in DB...");
+            var userFound = false;
+            for (var i = 0; i < $scope.users.length; i++) {
+                if($scope.currentUser === $scope.users[i].username){
+                    console.log("User found in DB.")
+                    userFound = true;
+                    console.log("Checking user deviceTokens");
+                    var hasToken = false;
+                    for (var j = 0; j < $scope.users[i].deviceTokens.length; j++) {
+                        if($scope.pushToken === $scope.users[i].deviceTokens[j]){
+                            hasToken = true;
+                        }
+                    }
+                    if(!hasToken){
+                        $scope.users[i].deviceTokens.push($scope.pushToken);
+                    }
+                    break;
+                }
+            }
+            if(!userFound){
+                console.log("User not Found. Adding user to DB");
+                $scope.users.$add({
+                    "username": $scope.currentUser,
+                    "deviceTokens": [$scope.pushToken]
+                });
+            }
+
         });
 
         // Identifies a user with the Ionic User service
-        $scope.identifyUser = function() {
+        $scope.identifyUser = function () {
             console.log('Ionic User: Identifying with Ionic User service');
 
             var user = $ionicUser.get();
-            if(!user.user_id) {
+            if (!user.user_id) {
                 // Set your user_id here, or generate a random one.
                 user.user_id = $ionicUser.generateGUID();
-            };
+            }
+            ;
 
             // Add some metadata to your user object.
             angular.extend(user, {
@@ -237,14 +269,14 @@ angular.module('starter.controllers', [])
             });
 
             // Identify your user with the Ionic User Service
-            $ionicUser.identify(user).then(function(){
+            $ionicUser.identify(user).then(function () {
                 $scope.identified = true;
                 //alert('Identified user ' + user.name + '\n ID ' + user.user_id);
             });
         };
 
         // Registers a device for push notifications and stores its token
-        $scope.pushRegister = function() {
+        $scope.pushRegister = function () {
             console.log('Ionic Push: Registering user');
 
             // Register with the Ionic Push service.  All parameters are optional.
@@ -253,9 +285,9 @@ angular.module('starter.controllers', [])
                 canSetBadge: true, //Can pushes update app icon badges?
                 canPlaySound: true, //Can notifications play a sound?
                 canRunActionsOnWake: true, //Can run actions outside the app,
-                onNotification: function(notification) {
+                onNotification: function (notification) {
                     // Handle new push notifications here
-                     console.log(notification);
+                    console.log(notification);
 
                     return true;
                 }
@@ -277,7 +309,7 @@ angular.module('starter.controllers', [])
             // Post message using user, message, and time.
             var PostFeelMessage = "DFW " + $scope.feelsMessage.msg;
             var date = new Date();
-            console.log("Posting: "+ PostFeelMessage+ " on "+ date);
+            console.log("Posting: " + PostFeelMessage + " on " + date);
             if ($scope.loggedIn && PostFeelMessage) {
                 $scope.feels.$add({
                     "user": $scope.currentUser,
@@ -295,58 +327,117 @@ angular.module('starter.controllers', [])
                 comments: []
             };
 
+            //list of all tokens
+            var allTokens = [];
+
+            for (var i = 0; i < $scope.users.length; i++) {
+                if($scope.users[i].username !== $scope.currentUser){
+                    for (var j = 0; j < $scope.users[i].deviceTokens.length; j++) {
+                        allTokens.push($scope.users[i].deviceTokens[j]);
+                    }
+                }
+            }
+
+            var data = {
+                "tokens": allTokens,
+                "notification": {
+                    "alert": PostFeelMessage,
+                    "ios": {
+                        "badge": 1,
+                        "sound": "ping.aiff",
+                        "expiry": 1423238641,
+                        "priority": 10,
+                        "contentAvailable": true,
+                        "payload": {
+                            "key1": "value",
+                            "key2": "value"
+                        }
+                    },
+                    "android": {
+                        "collapseKey": "foo",
+                        "delayWhileIdle": true,
+                        "timeToLive": 300,
+                        "payload": {
+                            "key1": "value",
+                            "key2": "value"
+                        }
+                    }
+                }
+            }
+
+            var privateAPIKey= window.btoa("4f9d0ac7d03bb78f24ef5b63cbbe89e70dff090aeb2f027b");
+
+            $http.post('https://push.ionic.io/api/v1/push', data, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Ionic-Application-Id': '45ec6dc0',
+                        'Authorization': "Basic "+ privateAPIKey
+                    }
+                }
+            ).
+                success(function (data, status, headers, config) {
+                    // this callback will be called asynchronously
+                    // when the response is available
+                    console.log("Data Pushed!!!")
+                }).
+                error(function (data, status, headers, config) {
+                    // called asynchronously if an error occurs
+                    // or server returns response with an error status.
+                    console.log("Data not pushed: ", data, status, headers, config)
+                });
+
             $scope.closeCreate();
         }
 
         // Delete a feel from the DB
-        $scope.deleteFeel = function(id){
-            var num = $scope.feels.length-id-1;
+        $scope.deleteFeel = function (id) {
+            var num = $scope.feels.length - id - 1;
             var userDeleting = $scope.feels[num].user;
-            if($scope.currentUser === userDeleting){
-                var isConfirmed = confirm("Are you sure you want to delete DFW #"+num+".");
-                if (isConfirmed){
-                    console.log("User: "+userDeleting+", is deleting DFW "+num+".");
+            if ($scope.currentUser === userDeleting) {
+                var isConfirmed = confirm("Are you sure you want to delete DFW #" + num + ".");
+                if (isConfirmed) {
+                    console.log("User: " + userDeleting + ", is deleting DFW " + num + ".");
                     $scope.feels.$remove(num);
                 }
             }
             else {
-                console.log("User: "+$scope.currentUser+" does not have permission to delete DFW "+num+".");
+                console.log("User: " + $scope.currentUser + " does not have permission to delete DFW " + num + ".");
             }
         }
 
         // Feeling a feel (liking) (hearts)
-        $scope.feelingItUp = function(id){
+        $scope.feelingItUp = function (id) {
             //console.log("User: "+$scope.currentUser+", is feeling up DFW #"+num+".");
             //alert("User: "+$scope.currentUser+" is feeling up DFW #"+num+".");
             var add = true;
-            var num = $scope.feels.length-id-1;
+            var num = $scope.feels.length - id - 1;
             var currentFeel = $scope.feels[num];
             var currentUserNum = -1;
-            if((typeof(currentFeel) !== 'undefined') && (currentFeel.feltBy)){
+            if ((typeof(currentFeel) !== 'undefined') && (currentFeel.feltBy)) {
                 var numFelt = currentFeel.feltBy.length;
-                console.log("The feel has "+numFelt+" feel(s).")
-                for(var i = 0; i < numFelt; i++){
-                    if(currentFeel.feltBy[i] === $scope.currentUser) {
+                //console.log("The feel has " + numFelt + " feel(s).")
+                for (var i = 0; i < numFelt; i++) {
+                    if (currentFeel.feltBy[i] === $scope.currentUser) {
                         add = false;
                         currentUserNum = i;
                     }
                 }
-                if(add){
+                if (add) {
                     currentFeel.feltBy.push($scope.currentUser);
                     $scope.feels.$save(num);
                     //alert("User: "+$scope.currentUser+" is feeling up DFW #"+num+".");
                 }
-                else{
+                else {
                     //alert("User: "+$scope.currentUser+" has already felt up DFW #"+num+".");
                     //alert("User: "+$scope.currentUser+" is unfeeling DFW #"+num+".");
-                    if(currentUserNum > -1){
-                        currentFeel.feltBy.splice(currentUserNum,1);
+                    if (currentUserNum > -1) {
+                        currentFeel.feltBy.splice(currentUserNum, 1);
                         $scope.feels.$save(num);
                     }
                 }
             }
             else {
-               currentFeel.feltBy = [$scope.currentUser];
+                currentFeel.feltBy = [$scope.currentUser];
                 $scope.feels.$save(num);
                 //alert("User: "+$scope.currentUser+" is feeling up DFW #"+num+". Feel was undefined, user was added.");
             }
@@ -368,8 +459,8 @@ angular.module('starter.controllers', [])
         //
         //}
     })
-    .filter('reverse', function() {
-        return function(items) {
+    .filter('reverse', function () {
+        return function (items) {
             return items.slice().reverse();
         };
     })
@@ -378,45 +469,47 @@ angular.module('starter.controllers', [])
         //console.log("Data", itemsRef);
         return $firebaseArray(itemsRef);
     })
-    .factory("Auth", function ($firebaseAuth) {
-        var usersRef = new Firebase("https://datfeel.firebaseio.com/users");
-        return $firebaseAuth(usersRef);
+    .factory("Users", function ($firebaseArray) {
+        var usersRef = new Firebase("https://datfeel.firebaseio.com/feelers");
+        //console.log("Data", usersRef);
+        return $firebaseArray(usersRef);
     })
-    .factory('$localstorage', ['$window', function($window) {
+    .factory('$localstorage', ['$window', function ($window) {
         return {
-            set: function(key, value) {
+            set: function (key, value) {
                 $window.localStorage[key] = value;
             },
-            get: function(key, defaultValue) {
+            get: function (key, defaultValue) {
                 return $window.localStorage[key] || defaultValue;
             },
-            setObject: function(key, value) {
+            setObject: function (key, value) {
                 $window.localStorage[key] = JSON.stringify(value);
             },
-            getObject: function(key) {
+            getObject: function (key) {
                 return JSON.parse($window.localStorage[key] || '{}');
             }
-        }}
+        }
+    }
     ])
-    .factory('Root', function($rootScope) {
+    .factory('Root', function ($rootScope) {
         return {
-            checkLogin: function() {
+            checkLogin: function () {
                 // Check if logged in and fire events
-                if(this.isLoggedIn()) {
+                if (this.isLoggedIn()) {
                     $rootScope.$broadcast('app.loggedIn');
                 } else {
                     $rootScope.$broadcast('app.loggedOut');
                 }
             },
-            isLoggedIn: function() {
+            isLoggedIn: function () {
                 // Check auth token here from localStorage
             },
-            login: function(user, pass) {
+            login: function (user, pass) {
                 // Do the login
                 // When done, trigger an event:
                 $rootScope.$broadcast('app.loggedIn');
             },
-            logout: function(user, pass) {
+            logout: function (user, pass) {
                 // Same thing, log out user
                 $rootScope.$broadcast('app.loggedOut');
             }

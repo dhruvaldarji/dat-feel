@@ -37,7 +37,8 @@
                                 <i class="icon ion-heart"></i>
                             </div>
                             <div class="post-text item-text-wrap text-wrap">
-                                <p>{{feel.user}}</p>
+                                <p>{{feel.user}} <i class="icon ion-trash-b" ng-show="currentUser === feel.user"
+                                                    ng-click="deleteFeel(id)"></i></p>
 
                                 <p class="text-wrap">{{feel.feel}}</p>
                             </div>
