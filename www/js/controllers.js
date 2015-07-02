@@ -215,7 +215,7 @@ angular.module('starter.controllers', [])
 
         // Handles incoming device tokens
         $rootScope.$on('$cordovaPush:tokenReceived', function(event, data) {
-            alert("Successfully registered token " + data.token);
+            //alert("Successfully registered token " + data.token);
             console.log('Ionic Push: Got token ', data.token, data.platform);
             $scope.token = data.token;
         });
@@ -232,14 +232,14 @@ angular.module('starter.controllers', [])
 
             // Add some metadata to your user object.
             angular.extend(user, {
-                name: $scope.currentUser.username,
+                name: $scope.currentUser,
                 bio: 'I like to use DatFeel to post Feels.'
             });
 
             // Identify your user with the Ionic User Service
             $ionicUser.identify(user).then(function(){
                 $scope.identified = true;
-                alert('Identified user ' + user.name + '\n ID ' + user.user_id);
+                //alert('Identified user ' + user.name + '\n ID ' + user.user_id);
             });
         };
 
