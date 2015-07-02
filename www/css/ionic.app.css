@@ -7703,6 +7703,8 @@ ion-content {
 .item {
   padding-bottom: 0;
   background-color: #F4DFFF; }
+  .item p {
+    color: #222; }
 
 .color {
   backgound-color: #203948; }
@@ -7725,4 +7727,5 @@ ion-content {
 .timestamp {
   font-size: .7em;
   font-weight: 300;
-  font-style: italic; }
+  font-style: italic;
+  color: #666; }
