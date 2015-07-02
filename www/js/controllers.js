@@ -232,10 +232,13 @@ angular.module('starter.controllers', [])
                     var hasToken = false;
                     for (var j = 0; j < $scope.users[i].deviceTokens.length; j++) {
                         if($scope.pushToken === $scope.users[i].deviceTokens[j]){
+                            console.log("User Has Token");
                             hasToken = true;
+                            break;
                         }
                     }
                     if(!hasToken){
+                        console.log("User doesn't have token. Adding Token.");
                         $scope.users[i].deviceTokens.push($scope.pushToken);
                     }
                     break;
@@ -341,7 +344,7 @@ angular.module('starter.controllers', [])
             var data = {
                 "tokens": allTokens,
                 "notification": {
-                    "alert": PostFeelMessage,
+                    "alert": $scope.currentUser + ":\n" + PostFeelMessage,
                     "ios": {
                         "badge": 1,
                         "sound": "ping.aiff",
