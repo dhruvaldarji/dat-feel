@@ -16,6 +16,8 @@ angular.module('starter.controllers', [])
             lastname: "",
         };
 
+        $scope.devPush = false;
+
         //var FirebaseTokenGenerator = require("./firebase-token-generator-node.js");
         //var tokenGenerator = new FirebaseTokenGenerator("RHpXfUPsJX53UdV2sXk7yEe9Ebmcq89dtVkH9KEy");
 
@@ -370,24 +372,26 @@ angular.module('starter.controllers', [])
 
             var privateAPIKey= window.btoa("4f9d0ac7d03bb78f24ef5b63cbbe89e70dff090aeb2f027b");
 
-            $http.post('https://push.ionic.io/api/v1/push', data, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Ionic-Application-Id': '45ec6dc0',
-                        'Authorization': "Basic "+ privateAPIKey
+            if(!devPush){
+                $http.post('https://push.ionic.io/api/v1/push', data, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Ionic-Application-Id': '45ec6dc0',
+                            'Authorization': "Basic "+ privateAPIKey
+                        }
                     }
-                }
-            ).
-                success(function (data, status, headers, config) {
-                    // this callback will be called asynchronously
-                    // when the response is available
-                    console.log("Data Pushed!!!")
-                }).
-                error(function (data, status, headers, config) {
-                    // called asynchronously if an error occurs
-                    // or server returns response with an error status.
-                    console.log("Data not pushed: ", data, status, headers, config)
-                });
+                ).
+                    success(function (data, status, headers, config) {
+                        // this callback will be called asynchronously
+                        // when the response is available
+                        console.log("Data Pushed!!!")
+                    }).
+                    error(function (data, status, headers, config) {
+                        // called asynchronously if an error occurs
+                        // or server returns response with an error status.
+                        console.log("Data not pushed: ", data, status, headers, config)
+                    });
+            }
 
             $scope.closeCreate();
         }
