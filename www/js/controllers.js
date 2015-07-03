@@ -16,8 +16,6 @@ angular.module('starter.controllers', [])
             lastname: "",
         };
 
-        $scope.devPush = false;
-
         //var FirebaseTokenGenerator = require("./firebase-token-generator-node.js");
         //var tokenGenerator = new FirebaseTokenGenerator("RHpXfUPsJX53UdV2sXk7yEe9Ebmcq89dtVkH9KEy");
 
@@ -227,30 +225,20 @@ angular.module('starter.controllers', [])
             console.log("Searching for user in DB...");
             var userFound = false;
             for (var i = 0; i < $scope.users.length; i++) {
-                if($scope.currentUser === $scope.users[i].username){
+                if ($scope.currentUser === $scope.users[i].username) {
                     console.log("User found in DB.")
                     userFound = true;
-                    console.log("Checking user deviceTokens");
-                    var hasToken = false;
-                    for (var j = 0; j < $scope.users[i].deviceTokens.length; j++) {
-                        if($scope.pushToken === $scope.users[i].deviceTokens[j]){
-                            console.log("User Has Token");
-                            hasToken = true;
-                            break;
-                        }
-                    }
-                    if(!hasToken){
-                        console.log("User doesn't have token. Adding Token.");
-                        $scope.users[i].deviceTokens.push($scope.pushToken);
-                    }
+                    console.log("Setting user deviceToken");
+                    $scope.users[i].deviceToken = $scope.pushToken;
+                    $scope.users.$save(i);
                     break;
                 }
             }
-            if(!userFound){
+            if (!userFound) {
                 console.log("User not Found. Adding user to DB");
                 $scope.users.$add({
                     "username": $scope.currentUser,
-                    "deviceTokens": [$scope.pushToken]
+                    "deviceToken": $scope.pushToken
                 });
             }
 
@@ -276,6 +264,7 @@ angular.module('starter.controllers', [])
             // Identify your user with the Ionic User Service
             $ionicUser.identify(user).then(function () {
                 $scope.identified = true;
+                console.log('Identified user ' + user.name + '\n ID ' + user.user_id);
                 //alert('Identified user ' + user.name + '\n ID ' + user.user_id);
             });
         };
@@ -292,7 +281,7 @@ angular.module('starter.controllers', [])
                 canRunActionsOnWake: true, //Can run actions outside the app,
                 onNotification: function (notification) {
                     // Handle new push notifications here
-                    console.log(notification);
+                    //console.log(notification);
 
                     return true;
                 }
@@ -335,11 +324,10 @@ angular.module('starter.controllers', [])
             //list of all tokens
             var allTokens = [];
 
+            console.log("Adding all user tokens for push");
             for (var i = 0; i < $scope.users.length; i++) {
-                if($scope.users[i].username !== $scope.currentUser){
-                    for (var j = 0; j < $scope.users[i].deviceTokens.length; j++) {
-                        allTokens.push($scope.users[i].deviceTokens[j]);
-                    }
+                if ($scope.users[i].username !== $scope.currentUser) {
+                    allTokens.push($scope.users[i].deviceToken);
                 }
             }
 
@@ -370,28 +358,24 @@ angular.module('starter.controllers', [])
                 }
             }
 
-            var privateAPIKey= window.btoa("4f9d0ac7d03bb78f24ef5b63cbbe89e70dff090aeb2f027b");
+            var privateAPIKey = window.btoa("4f9d0ac7d03bb78f24ef5b63cbbe89e70dff090aeb2f027b");
 
-            if(!devPush){
-                $http.post('https://push.ionic.io/api/v1/push', data, {
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-Ionic-Application-Id': '45ec6dc0',
-                            'Authorization': "Basic "+ privateAPIKey
-                        }
-                    }
-                ).
-                    success(function (data, status, headers, config) {
-                        // this callback will be called asynchronously
-                        // when the response is available
-                        console.log("Data Pushed!!!")
-                    }).
-                    error(function (data, status, headers, config) {
-                        // called asynchronously if an error occurs
-                        // or server returns response with an error status.
-                        console.log("Data not pushed: ", data, status, headers, config)
-                    });
-            }
+            $http.post('https://push.ionic.io/api/v1/push', data, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Ionic-Application-Id': '45ec6dc0',
+                    'Authorization': "Basic " + privateAPIKey
+                }
+            }).success(function (data, status, headers, config) {
+                // this callback will be called asynchronously
+                // when the response is available
+                console.log("Data Pushed!!!", data, status, headers, config)
+            }).
+                error(function (data, status, headers, config) {
+                    // called asynchronously if an error occurs
+                    // or server returns response with an error status.
+                    console.log("Data not pushed: ", data, status, headers, config)
+                });
 
             $scope.closeCreate();
         }
