@@ -1,6 +1,7 @@
 angular.module('starter.controllers', [])
     .controller('AppCtrl', function ($scope, $state, $ionicModal, $timeout,
-                                     $localstorage, Feels, Users, $rootScope, $ionicUser, $ionicPush, $http) {
+                                     $localstorage, Feels, Users, $rootScope,
+                                     $ionicUser, $ionicPush, $http) {
 
         // Form data for the login modal
         $scope.loginData = {
@@ -281,8 +282,7 @@ angular.module('starter.controllers', [])
                 canRunActionsOnWake: true, //Can run actions outside the app,
                 onNotification: function (notification) {
                     // Handle new push notifications here
-                    //console.log(notification);
-
+                    console.log(notification);
                     return true;
                 }
             });

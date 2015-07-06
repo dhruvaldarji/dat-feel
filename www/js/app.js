@@ -4,9 +4,10 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'firebase', 'ngCordova', 'ionic.service.core', 'ionic.service.analytics', 'ionic.service.push', 'starter.controllers'])
+angular.module('starter', ['ionic', 'firebase', 'ngCordova', 'ionic.service.core',
+    'ionic.service.analytics', 'ionic.service.push', 'starter.controllers'])
 
-    .run(function ($ionicPlatform) {
+    .run(function ($ionicPlatform, $ionicAnalytics) {
         $ionicPlatform.ready(function () {
 
             // Add this inside your $ionicPlatform.ready function that is defined inside the run function:
