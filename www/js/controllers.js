@@ -28,6 +28,7 @@ angular.module('starter.controllers', [])
 
         $scope.feelsMessage = {
             msg: "",
+            attachments: [], // Links, images, etc
             user: "",
             date: "",
             feltBy: [],
@@ -97,6 +98,12 @@ angular.module('starter.controllers', [])
                     console.log("Successfully logged in account with username:", authData.password.email);
                     $scope.currentUser = authData.password.email;
                     $scope.loggedIn = true;
+
+                    // Identify user for Pushes
+                    $scope.identifyUser();
+
+                    // Register user for Pushes
+                    $scope.pushRegister();
                 }
             });
 
@@ -120,12 +127,6 @@ angular.module('starter.controllers', [])
                     });
                 }
 
-                // Identify user for Pushes
-                $scope.identifyUser();
-
-                // Register user for Pushes
-                $scope.pushRegister();
-
                 $scope.closeLogin();
             }, 1000);
         };
@@ -136,7 +137,7 @@ angular.module('starter.controllers', [])
             $scope.currentUser = {};
             ref.unauth();
             $scope.loggedIn = false;
-            // Simulate a login delay. Remove this and replace with your login
+            // Simulate a logout delay. Remove this and replace with your logout
             // code if using a login system
             $timeout(function () {
                 $scope.loading = false;
@@ -252,13 +253,14 @@ angular.module('starter.controllers', [])
             var user = $ionicUser.get();
             if (!user.user_id) {
                 // Set your user_id here, or generate a random one.
-                user.user_id = $ionicUser.generateGUID();
+                //user.user_id = $ionicUser.generateGUID();
+                user.user_id = $scope.currentUser;
             }
-            ;
 
             // Add some metadata to your user object.
             angular.extend(user, {
                 name: $scope.currentUser,
+                pushToken: $scope.pushToken,
                 bio: 'I like to use DatFeel to post Feels.'
             });
 
@@ -307,6 +309,7 @@ angular.module('starter.controllers', [])
             if ($scope.loggedIn && PostFeelMessage) {
                 $scope.feels.$add({
                     "user": $scope.currentUser,
+                    "attachments": [],
                     "date": date.toDateString(),
                     "feel": PostFeelMessage,
                     "feltBy": [],
@@ -315,6 +318,7 @@ angular.module('starter.controllers', [])
             }
             $scope.feelsMessage = {
                 msg: "",
+                attachments: [],
                 user: "",
                 date: "",
                 feltBy: [],
@@ -449,6 +453,8 @@ angular.module('starter.controllers', [])
         //    alert("User: "+$scope.currentUser+" is sharing DFW #"+num+".");
         //
         //}
+
+
     })
     .filter('reverse', function () {
         return function (items) {
