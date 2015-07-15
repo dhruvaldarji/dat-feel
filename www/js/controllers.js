@@ -17,6 +17,8 @@ angular.module('starter.controllers', [])
             lastname: "",
         };
 
+        $scope.isAdmin = false;
+
         //var FirebaseTokenGenerator = require("./firebase-token-generator-node.js");
         //var tokenGenerator = new FirebaseTokenGenerator("RHpXfUPsJX53UdV2sXk7yEe9Ebmcq89dtVkH9KEy");
 
@@ -92,12 +94,33 @@ angular.module('starter.controllers', [])
                 password: $scope.loginData.password
             }, function (error, authData) {
                 if (error) {
-                    alert("Login Failed: " + error);
+                    // An alert dialog
+                    $scope.showAlert = function() {
+                        var alertPopup = $ionicPopup.alert({
+                            title: 'Login Failed',
+                            template: error
+                        });
+                        alertPopup.then(function(res) {
+                            console.log("Login Failed: " + error);
+                        });
+                    };
+
                     console.log("Login Failed!", error);
                 } else {
                     console.log("Successfully logged in account with username:", authData.password.email);
                     $scope.currentUser = authData.password.email;
                     $scope.loggedIn = true;
+
+                    // An alert dialog
+                    $scope.showAlert = function() {
+                        var alertPopup = $ionicPopup.alert({
+                            title: 'Success',
+                            template: "Logged in as " + $scope.currentUser
+                        });
+                        alertPopup.then(function(res) {
+                            console.log("Login Failed: " + error);
+                        });
+                    };
 
                     // Identify user for Pushes
                     $scope.identifyUser();
@@ -111,22 +134,23 @@ angular.module('starter.controllers', [])
             // code if using a login system
             $timeout(function () {
                 $scope.loading = false;
-                if ($scope.loginData.remember) {
-                    $localstorage.setObject('loginData', {
-                        loginData: $scope.loginData
-                    });
+                if($scope.loggedIn){
+                    if ($scope.loginData.remember) {
+                        $localstorage.setObject('loginData', {
+                            loginData: $scope.loginData
+                        });
+                    }
+                    else {
+                        $scope.loginData = {
+                            username: "",
+                            password: "",
+                            remember: false
+                        };
+                        $localstorage.setObject('loginData', {
+                            loginData: $scope.loginData
+                        });
+                    }
                 }
-                else {
-                    $scope.loginData = {
-                        username: "",
-                        password: "",
-                        remember: false
-                    };
-                    $localstorage.setObject('loginData', {
-                        loginData: $scope.loginData
-                    });
-                }
-
                 $scope.closeLogin();
             }, 1000);
         };
@@ -210,13 +234,6 @@ angular.module('starter.controllers', [])
             };
         };
 
-        // Create the login modal that we will use later
-        $ionicModal.fromTemplateUrl('templates/create.html', {
-            scope: $scope
-        }).then(function (modal) {
-            $scope.createModal = modal;
-        });
-
         // Handles incoming device tokens
         $rootScope.$on('$cordovaPush:tokenReceived', function (event, data) {
             //alert("Successfully registered token " + data.pushToken);
@@ -230,6 +247,14 @@ angular.module('starter.controllers', [])
                 if ($scope.currentUser === $scope.users[i].username) {
                     console.log("User found in DB.")
                     userFound = true;
+
+                    //check if isAdmin
+                    if($scope.users[i].isAdmin){
+                        $scope.isAdmin = true;
+                        console.log("User is Admin");
+                    }
+                    else $scope.isAdmin = false;
+
                     console.log("Setting user deviceToken");
                     $scope.users[i].deviceToken = $scope.pushToken;
                     $scope.users.$save(i);
@@ -290,6 +315,13 @@ angular.module('starter.controllers', [])
             });
         };
 
+        // Create the login modal that we will use later
+        $ionicModal.fromTemplateUrl('templates/create.html', {
+            scope: $scope
+        }).then(function (modal) {
+            $scope.createModal = modal;
+        });
+
         // Triggered in the login modal to close it
         $scope.closeCreate = function () {
             $scope.createModal.hide();
@@ -310,7 +342,7 @@ angular.module('starter.controllers', [])
                 $scope.feels.$add({
                     "user": $scope.currentUser,
                     "attachments": [],
-                    "date": date.toDateString(),
+                    "date": date.toLocaleString(),
                     "feel": PostFeelMessage,
                     "feltBy": [],
                     "comments": []
@@ -453,6 +485,107 @@ angular.module('starter.controllers', [])
         //    alert("User: "+$scope.currentUser+" is sharing DFW #"+num+".");
         //
         //}
+
+        // Create the login modal that we will use later
+        $ionicModal.fromTemplateUrl('templates/adminCreate.html', {
+            scope: $scope
+        }).then(function (modal) {
+            $scope.createAdminModal = modal;
+        });
+
+        // Triggered in the login modal to close it
+        $scope.closeAdminCreate = function () {
+            $scope.createAdminModal.hide();
+        };
+
+        // Open the login modal
+        $scope.adminCreate = function () {
+            $scope.createAdminModal.show();
+        };
+
+        // Post a feel to the DB
+        $scope.postAdminFeel = function () {
+            // Post message using user, message, and time.
+            var PostFeelMessage = $scope.adminFeelsMessage.msg;
+            var date = new Date();
+            console.log("Posting: " + PostFeelMessage + " on " + date);
+            if ($scope.loggedIn && PostFeelMessage) {
+                $scope.feels.$add({
+                    "user": $scope.currentUser,
+                    "attachments": [],
+                    "date": date.toLocaleString(),
+                    "feel": PostFeelMessage,
+                    "feltBy": [],
+                    "comments": []
+                });
+            }
+            $scope.adminFeelsMessage = {
+                msg: "",
+                attachments: [],
+                user: "",
+                date: "",
+                feltBy: [],
+                comments: []
+            };
+
+            //list of all tokens
+            var allTokens = [];
+
+            console.log("Adding all user tokens for push");
+            for (var i = 0; i < $scope.users.length; i++) {
+                if ($scope.users[i].username !== $scope.currentUser) {
+                    allTokens.push($scope.users[i].deviceToken);
+                }
+            }
+
+            var data = {
+                "tokens": allTokens,
+                "notification": {
+                    "alert": "Admin Feels:\n" + PostFeelMessage,
+                    "ios": {
+                        "badge": 1,
+                        "sound": "ping.aiff",
+                        "expiry": 1423238641,
+                        "priority": 10,
+                        "contentAvailable": true,
+                        "payload": {
+                            "key1": "Admin",
+                            "key2": PostFeelMessage
+                        }
+                    },
+                    "android": {
+                        "collapseKey": "foo",
+                        "delayWhileIdle": true,
+                        "timeToLive": 300,
+                        "payload": {
+                            "key1": "Admin",
+                            "key2": PostFeelMessage
+                        }
+                    }
+                }
+            }
+
+            var privateAPIKey = window.btoa("4f9d0ac7d03bb78f24ef5b63cbbe89e70dff090aeb2f027b");
+
+            $http.post('https://push.ionic.io/api/v1/push', data, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Ionic-Application-Id': '45ec6dc0',
+                    'Authorization': "Basic " + privateAPIKey
+                }
+            }).success(function (data, status, headers, config) {
+                // this callback will be called asynchronously
+                // when the response is available
+                console.log("Data Pushed!!!", data, status, headers, config)
+            }).
+                error(function (data, status, headers, config) {
+                    // called asynchronously if an error occurs
+                    // or server returns response with an error status.
+                    console.log("Data not pushed: ", data, status, headers, config)
+                });
+
+            $scope.closeCreate();
+        }
 
 
     })
