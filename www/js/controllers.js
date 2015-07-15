@@ -1,7 +1,7 @@
 angular.module('starter.controllers', [])
     .controller('AppCtrl', function ($scope, $state, $ionicModal, $timeout,
                                      $localstorage, Feels, Users, $rootScope,
-                                     $ionicUser, $ionicPush, $http) {
+                                     $ionicUser, $ionicPush, $http, $ionicPopup) {
 
         // Form data for the login modal
         $scope.loginData = {
@@ -29,6 +29,15 @@ angular.module('starter.controllers', [])
         $scope.currentUser = {};
 
         $scope.feelsMessage = {
+            msg: "",
+            attachments: [], // Links, images, etc
+            user: "",
+            date: "",
+            feltBy: [],
+            comments: []
+        };
+
+        $scope.adminFeelsMessage = {
             msg: "",
             attachments: [], // Links, images, etc
             user: "",
@@ -249,11 +258,15 @@ angular.module('starter.controllers', [])
                     userFound = true;
 
                     //check if isAdmin
+                    console.log("User: ", $scope.users[i]);
                     if($scope.users[i].isAdmin){
                         $scope.isAdmin = true;
                         console.log("User is Admin");
                     }
-                    else $scope.isAdmin = false;
+                    else {
+                        console.log("User is not Admin");
+                        $scope.isAdmin = false;
+                    }
 
                     console.log("Setting user deviceToken");
                     $scope.users[i].deviceToken = $scope.pushToken;
@@ -532,16 +545,19 @@ angular.module('starter.controllers', [])
             var allTokens = [];
 
             console.log("Adding all user tokens for push");
-            for (var i = 0; i < $scope.users.length; i++) {
-                if ($scope.users[i].username !== $scope.currentUser) {
-                    allTokens.push($scope.users[i].deviceToken);
-                }
-            }
+            //for (var i = 0; i < $scope.users.length; i++) {
+            //    if ($scope.users[i].username !== $scope.currentUser) {
+            //        allTokens.push($scope.users[i].deviceToken);
+            //    }
+            //}
+
+            //Test Push on Dhruval
+            allTokens.push("92b3476b085b92324d5b98b1e89d67b4730f67cb11d327c6d8813589b470e7cd");
 
             var data = {
                 "tokens": allTokens,
                 "notification": {
-                    "alert": "Admin Feels:\n" + PostFeelMessage,
+                    "alert": "Message From Admins:\n" + PostFeelMessage,
                     "ios": {
                         "badge": 1,
                         "sound": "ping.aiff",
@@ -549,7 +565,7 @@ angular.module('starter.controllers', [])
                         "priority": 10,
                         "contentAvailable": true,
                         "payload": {
-                            "key1": "Admin",
+                            "key1": "Message From Admins",
                             "key2": PostFeelMessage
                         }
                     },
@@ -558,7 +574,7 @@ angular.module('starter.controllers', [])
                         "delayWhileIdle": true,
                         "timeToLive": 300,
                         "payload": {
-                            "key1": "Admin",
+                            "key1": "Message From Admins",
                             "key2": PostFeelMessage
                         }
                     }
@@ -584,7 +600,7 @@ angular.module('starter.controllers', [])
                     console.log("Data not pushed: ", data, status, headers, config)
                 });
 
-            $scope.closeCreate();
+            $scope.closeAdminCreate();
         }
 
 
