@@ -1,5 +1,5 @@
 <ion-modal-view view-title="Register">
-    <ion-header-bar>
+    <ion-header-bar class="bar-energized">
         <h1 class="title">Register</h1>
     </ion-header-bar>
     <ion-content>
@@ -15,7 +15,7 @@
                 </label>
                 <label class="item item-input" ng-required="registerData.username">
                     <span class="input-label">E-Mail: </span>
-                    <input type="text" ng-model="registerData.username">
+                    <input type="email" ng-model="registerData.username">
                 </label>
                 <label class="item item-input" ng-required="registerData.password">
                     <span class="input-label">Password: </span>

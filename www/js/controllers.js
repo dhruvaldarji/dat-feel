@@ -1,7 +1,8 @@
 angular.module('starter.controllers', [])
     .controller('AppCtrl', function ($scope, $state, $ionicModal, $timeout,
                                      $localstorage, Feels, Users, $rootScope,
-                                     $ionicUser, $ionicPush, $http, $ionicPopup) {
+                                     $ionicUser, $ionicPush, $http,
+                                     $ionicPopup, $ionicPopover, $ionicLoading) {
 
         // Form data for the login modal
         $scope.loginData = {
@@ -18,6 +19,8 @@ angular.module('starter.controllers', [])
         };
 
         $scope.isAdmin = false;
+
+        $scope.isConfirmed = false;
 
         //var FirebaseTokenGenerator = require("./firebase-token-generator-node.js");
         //var tokenGenerator = new FirebaseTokenGenerator("RHpXfUPsJX53UdV2sXk7yEe9Ebmcq89dtVkH9KEy");
@@ -46,7 +49,59 @@ angular.module('starter.controllers', [])
             comments: []
         };
 
+        $scope.commentingFeel = {};
+        $scope.commentingMessage = {
+            index: -1,
+            msg: ""
+        };
+
+        //Solves Websocket fail issue for mobile
+        if ($localstorage.getObject('firebase:previous_websocket_failure')) {
+            $localstorage.setObject('firebase:previous_websocket_failure', false);
+        }
+
         var ref = new Firebase("https://datfeel.firebaseio.com");
+
+        $scope.showLoading = function () {
+            $ionicLoading.show({
+                template: '<ion-spinner icon="ripple" class="spinner-energized"></ion-spinner>',
+                animation: 'fade-in',
+                noBackdrop: false,
+            });
+        };
+        $scope.hideLoading = function () {
+            $ionicLoading.hide();
+        };
+
+        // A confirm dialog
+        $scope.showConfirm = function (title, template) {
+            var confirmPopup = $ionicPopup.confirm({
+                title: title,
+                template: template
+            });
+            confirmPopup.then(function (res) {
+                return res;
+                $scope.isConfirmed = res;
+                if (res) {
+                    console.log('Confirmed');
+                    $scope.confirmSuccess();
+                } else {
+                    console.log('Not Confirmed');
+                    $scope.confirmFail();
+                }
+            });
+        };
+
+        // An alert dialog
+        $scope.showAlert = function (title, template) {
+            var alertPopup = $ionicPopup.alert({
+                title: title,
+                template: template
+            });
+            alertPopup.then(function (res) {
+                console.log("Error: " + error);
+            });
+        };
 
         $scope.$on('app.loggedOut', function (e) {
             // Show the modal here
@@ -81,11 +136,15 @@ angular.module('starter.controllers', [])
             animation: 'slide-in-up'
         }).then(function (modal) {
             $scope.loginModal = modal;
+            $scope.showLoading();
             $scope.login();
         });
 
         $scope.login = function () {
             $scope.loginModal.show();
+            $timeout(function () {
+                $scope.hideLoading();
+            }, 500);
         };
 
         $scope.closeLogin = function () {
@@ -96,40 +155,24 @@ angular.module('starter.controllers', [])
         // Reference:     https://www.firebase.com/docs/web/guide/login/password.html
         $scope.doLogin = function () {
             console.log('Doing login', $scope.loginData);
+            $scope.showLoading();
 
-            $scope.loading = true;
             ref.authWithPassword({
                 email: $scope.loginData.username,
                 password: $scope.loginData.password
             }, function (error, authData) {
                 if (error) {
                     // An alert dialog
-                    $scope.showAlert = function() {
-                        var alertPopup = $ionicPopup.alert({
-                            title: 'Login Failed',
-                            template: error
-                        });
-                        alertPopup.then(function(res) {
-                            console.log("Login Failed: " + error);
-                        });
-                    };
-
-                    console.log("Login Failed!", error);
+                    $scope.showAlert('Login Failed', error);
+                    console.log("Login Failed: ", error);
                 } else {
                     console.log("Successfully logged in account with username:", authData.password.email);
                     $scope.currentUser = authData.password.email;
                     $scope.loggedIn = true;
 
                     // An alert dialog
-                    $scope.showAlert = function() {
-                        var alertPopup = $ionicPopup.alert({
-                            title: 'Success',
-                            template: "Logged in as " + $scope.currentUser
-                        });
-                        alertPopup.then(function(res) {
-                            console.log("Login Failed: " + error);
-                        });
-                    };
+                    //$scope.showAlert('Login Success', "Logged in as " +$scope.currentUser);
+                    console.log("Logged in as " + $scope.currentUser);
 
                     // Identify user for Pushes
                     $scope.identifyUser();
@@ -137,43 +180,40 @@ angular.module('starter.controllers', [])
                     // Register user for Pushes
                     $scope.pushRegister();
                 }
-            });
 
-            // Simulate a login delay. Remove this and replace with your login
-            // code if using a login system
-            $timeout(function () {
-                $scope.loading = false;
-                if($scope.loggedIn){
-                    if ($scope.loginData.remember) {
-                        $localstorage.setObject('loginData', {
-                            loginData: $scope.loginData
-                        });
+                // Simulate a login delay. Remove this and replace with your login
+                // code if using a login system
+                $timeout(function () {
+                    if ($scope.loggedIn) {
+                        if ($scope.loginData.remember) {
+                            $localstorage.setObject('loginData', {
+                                loginData: $scope.loginData
+                            });
+                        }
+                        else {
+                            $scope.loginData = {
+                                username: "",
+                                password: "",
+                                remember: false
+                            };
+                            $localstorage.setObject('loginData', {
+                                loginData: $scope.loginData
+                            });
+                        }
                     }
-                    else {
-                        $scope.loginData = {
-                            username: "",
-                            password: "",
-                            remember: false
-                        };
-                        $localstorage.setObject('loginData', {
-                            loginData: $scope.loginData
-                        });
-                    }
-                }
-                $scope.closeLogin();
-            }, 1000);
+                    $scope.closeLogin();
+                    $scope.hideLoading();
+                }, 1000);
+            });
         };
 
         $scope.doLogout = function () {
             console.log('Doing Logout');
-            $scope.loading = true;
-            $scope.currentUser = {};
-            ref.unauth();
-            $scope.loggedIn = false;
-            // Simulate a logout delay. Remove this and replace with your logout
-            // code if using a login system
+            $scope.showLoading();
             $timeout(function () {
-                $scope.loading = false;
+                $scope.loggedIn = false;
+                $scope.currentUser = {};
+                ref.unauth();
                 $scope.login();
             }, 1000);
         };
@@ -207,7 +247,6 @@ angular.module('starter.controllers', [])
         // Perform the register action when the user submits the register form
         $scope.doRegister = function () {
             console.log('Registering', $scope.registerData);
-            $scope.loading = true;
             ref.createUser({
                 email: $scope.registerData.username,
                 password: $scope.registerData.password,
@@ -236,7 +275,6 @@ angular.module('starter.controllers', [])
                 }
             });
 
-            $scope.loading = false;
             $scope.registerData = {
                 username: "",
                 password: ""
@@ -250,7 +288,7 @@ angular.module('starter.controllers', [])
             $scope.pushToken = data.token;
             $scope.pushPlatform = data.platform;
 
-            console.log("Searching for user in DB...");
+            //console.log("Searching for user in DB...");
             var userFound = false;
             for (var i = 0; i < $scope.users.length; i++) {
                 if ($scope.currentUser === $scope.users[i].username) {
@@ -259,7 +297,7 @@ angular.module('starter.controllers', [])
 
                     //check if isAdmin
                     console.log("User: ", $scope.users[i]);
-                    if($scope.users[i].isAdmin){
+                    if ($scope.users[i].isAdmin) {
                         $scope.isAdmin = true;
                         console.log("User is Admin");
                     }
@@ -322,7 +360,8 @@ angular.module('starter.controllers', [])
                 canRunActionsOnWake: true, //Can run actions outside the app,
                 onNotification: function (notification) {
                     // Handle new push notifications here
-                    console.log(notification);
+                    //console.log(notification);
+                    $scope.showAlert("Notification", notification);
                     return true;
                 }
             });
@@ -481,15 +520,81 @@ angular.module('starter.controllers', [])
                 $scope.feels.$save(num);
                 //alert("User: "+$scope.currentUser+" is feeling up DFW #"+num+". Feel was undefined, user was added.");
             }
-        }
+        };
+
+        // Create the login modal that we will use later
+        $ionicModal.fromTemplateUrl('templates/postComment.html', {
+            scope: $scope
+        }).then(function (modal) {
+            $scope.commentModal = modal;
+        });
+
+        // Triggered in the login modal to close it
+        $scope.closeComment = function () {
+            $scope.commentModal.hide();
+        };
+
+        // Open the login modal
+        $scope.comment = function (id) {
+            var num = $scope.feels.length - id - 1;
+            $scope.commentingFeel = $scope.feels[num];
+            $scope.commentingMessage.index = num;
+            //console.log("Opening Comment Modal for Feel ", $scope.commentingMessage.index);
+            $scope.commentModal.show();
+        };
 
         // Commenting a feel
-        //$scope.commentFeel = function(id){
-        //    var num = $scope.feels.length-id-1;
-        //    console.log("User: "+$scope.currentUser+", is commenting on DFW #"+num+".");
-        //    alert("User: "+$scope.currentUser+" is commenting on DFW #"+num+".");
-        //
-        //}
+        $scope.commentOnFeel = function () {
+            //console.log("User: "+$scope.currentUser+", is commenting on DFW #"+$scope.commentingMessage.index+".");
+            //alert("User: "+$scope.currentUser+" is commenting on DFW #"+$scope.commentingMessage.index+".");
+            var currentFeel = $scope.feels[$scope.commentingMessage.index];
+            var currentUserNum = -1;
+            if ((typeof(currentFeel) !== 'undefined') && (currentFeel.comments)) {
+                var numCommented = $scope.commentingFeel.comments.length;
+                //console.log("The feel has " + numCommented + " comment(s).")
+                currentFeel.comments.push({user: $scope.currentUser, comment: $scope.commentingMessage.msg, date: (new Date()).toLocaleString()});
+                $scope.feels.$save($scope.commentingMessage.index);
+                //alert("User: "+$scope.currentUser+" is commenting on DFW #"+$scope.commentingMessage.index+".");
+            }
+            else {
+                currentFeel.comments = [{
+                    user: $scope.currentUser,
+                    comment: $scope.commentingMessage.msg,
+                    date: (new Date()).toLocaleString()
+                }];
+                $scope.feels.$save($scope.commentingMessage.index);
+                //alert("User: "+$scope.currentUser+" is commenting on DFW #"+$scope.commentingMessage.index+". Feel was undefined, user was added.");
+            }
+            $scope.commentingMessage.msg = "";
+        };
+
+        // Delete a feel from the DB
+        $scope.deleteComment = function (id) {
+            var num = $scope.commentingMessage.index;
+            //console.log("DFW # " + num + ", Comment # ", id);
+            var userDeleting = $scope.feels[num].comments[id].user;
+            if ($scope.currentUser === userDeleting) {
+
+                var confirmPopup = $ionicPopup.confirm({
+                    title: "Delete Comment",
+                    template: "Are you sure you want to delete this comment?"
+                });
+                confirmPopup.then(function (res) {
+                    console.log('Confirmed', res);
+                    if (res) {
+                        //console.log("User: " + userDeleting + ", is deleting comment " + id + "of DFW " + num + ".");
+                        $scope.feels[num].comments.splice(id,1);
+                        $scope.feels.$save(num);
+                    } else {
+                        //console.log('Cancelled');
+                    }
+                    return res;
+                });
+            }
+            else {
+                //console.log("User: " + $scope.currentUser + " does not have permission to delete Comment " + id + "from DFW " + num + ".");
+            }
+        };
 
         // Sharing a feel
         //$scope.shareFeel = function(id){
@@ -544,15 +649,15 @@ angular.module('starter.controllers', [])
             //list of all tokens
             var allTokens = [];
 
-            console.log("Adding all user tokens for push");
-            //for (var i = 0; i < $scope.users.length; i++) {
-            //    if ($scope.users[i].username !== $scope.currentUser) {
-            //        allTokens.push($scope.users[i].deviceToken);
-            //    }
-            //}
+            //console.log("Adding all user tokens for push");
+            for (var i = 0; i < $scope.users.length; i++) {
+                if ($scope.users[i].username !== $scope.currentUser) {
+                    allTokens.push($scope.users[i].deviceToken);
+                }
+            }
 
             //Test Push on Dhruval
-            allTokens.push("92b3476b085b92324d5b98b1e89d67b4730f67cb11d327c6d8813589b470e7cd");
+            //allTokens.push("92b3476b085b92324d5b98b1e89d67b4730f67cb11d327c6d8813589b470e7cd");
 
             var data = {
                 "tokens": allTokens,
@@ -602,7 +707,6 @@ angular.module('starter.controllers', [])
 
             $scope.closeAdminCreate();
         }
-
 
     })
     .filter('reverse', function () {

@@ -19,10 +19,6 @@
     padding: 0 10px;
 }
 
-/* allows the bar-footer to be elastic /*
-/* optionally set a max-height */
-/* maxlength on the textarea will prevent /*
-/* it from getting too large also */
 .bar-footer {
     overflow: visible !important;
 }

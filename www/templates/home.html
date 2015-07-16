@@ -11,7 +11,9 @@
         <div class="card" ng-hide="loggedIn">
             <div class="item">
                 <h2 style="text-align: center">System:</h2>
+
                 <p style="text-align: center">Please Login</p>
+
                 <p style="text-align: center">Wait While Content Loads</p>
             </div>
         </div>
@@ -27,19 +29,19 @@
                 <ion-item class="message_item" ng-if="loggedIn" ng-repeat="(id, feel) in feels | reverse">
                     <div class="list-item">
                         <div class="row">
-                            <div class="col-offset-10 col-90">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="like-count col-10" ng-click="feelingItUp(id)">
+                            <div class="like-count col-10 col-center" ng-click="feelingItUp(id)">
                                 <p>{{feel.feltBy.length}}</p>
                                 <i class="icon ion-heart"></i>
                             </div>
-                            <div class="post-text item-text-wrap text-wrap">
+                            <div class="col col-80 post-text item-text-wrap text-wrap">
                                 <p>{{feel.user}} <i class="icon ion-trash-b" ng-show="currentUser === feel.user"
                                                     ng-click="deleteFeel(id)"></i></p>
 
                                 <p class="text-wrap">{{feel.feel}}</p>
+                            </div>
+                            <div class="comment col-10 col-center" ng-click="comment(id)">
+                                <p>{{feel.comments.length}}</p>
+                                <i class="icon ion-chatbox"></i>
                             </div>
                         </div>
                         <div class="row">
@@ -47,35 +49,6 @@
                                 {{feel.date}}
                             </div>
                         </div>
-                        <!--<div class="list card">-->
-                        <!--<div class="item item-avatar item-icon-right">-->
-                        <!--<img src="./img/ionic.png">-->
-
-                        <!--<h2 class="test">{{feel.user}}</h2>-->
-
-                        <!--<p ng-show="feel.date">{{feel.date}}</p>-->
-
-                        <!--<p ng-hide="feel.date">No Date Data</p>-->
-                        <!--<i class="icon ion-trash-b" ng-show="currentUser === feel.user"-->
-                        <!--ng-click="deleteFeel(id)"></i>-->
-                        <!--</div>-->
-                        <!--<div class="item item-text-wrap">-->
-                        <!--<p>{{feel.feel}}</p>-->
-                        <!--</div>-->
-                        <!--<div class="item tabs tabs-secondary tabs-icon-left">-->
-                        <!--<a class="tab-item" ng-click="feelingItUp(id)">-->
-                        <!--<i class="icon ion-heart"></i>-->
-                        <!--{{feel.feltBy.length}} Feel-->
-                        <!--</a>-->
-                        <!--&lt;!&ndash;<a class="tab-item" ng-click="commentFeel(id)">&ndash;&gt;-->
-                        <!--&lt;!&ndash;<i class="icon ion-chatbox"></i>&ndash;&gt;-->
-                        <!--&lt;!&ndash;Comment&ndash;&gt;-->
-                        <!--&lt;!&ndash;</a>&ndash;&gt;-->
-                        <!--&lt;!&ndash;<a class="tab-item" ng-click="shareFeel(id)">&ndash;&gt;-->
-                        <!--&lt;!&ndash;<i class="icon ion-share"></i>&ndash;&gt;-->
-                        <!--&lt;!&ndash;Share&ndash;&gt;-->
-                        <!--&lt;!&ndash;</a>&ndash;&gt;-->
-                        <!--</div>-->
                     </div>
                 </ion-item>
             </ion-list>
