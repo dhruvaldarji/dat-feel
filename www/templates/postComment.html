@@ -68,7 +68,7 @@
         </label>
 
         <div class="footer-btn-wrap">
-            <button class="button button-icon icon ion-paper-airplane footer-btn" ng-click="commentOnFeel()"></button>
+            <button ng-show='commentingFeel.msg !== ""' class="button button-icon icon ion-paper-airplane footer-btn" ng-click="commentOnFeel()"></button>
         </div>
     </ion-footer-bar>
 </ion-modal-view>

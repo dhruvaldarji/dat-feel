@@ -549,21 +549,23 @@ angular.module('starter.controllers', [])
             //alert("User: "+$scope.currentUser+" is commenting on DFW #"+$scope.commentingMessage.index+".");
             var currentFeel = $scope.feels[$scope.commentingMessage.index];
             var currentUserNum = -1;
-            if ((typeof(currentFeel) !== 'undefined') && (currentFeel.comments)) {
-                var numCommented = $scope.commentingFeel.comments.length;
-                //console.log("The feel has " + numCommented + " comment(s).")
-                currentFeel.comments.push({user: $scope.currentUser, comment: $scope.commentingMessage.msg, date: (new Date()).toLocaleString()});
-                $scope.feels.$save($scope.commentingMessage.index);
-                //alert("User: "+$scope.currentUser+" is commenting on DFW #"+$scope.commentingMessage.index+".");
-            }
-            else {
-                currentFeel.comments = [{
-                    user: $scope.currentUser,
-                    comment: $scope.commentingMessage.msg,
-                    date: (new Date()).toLocaleString()
-                }];
-                $scope.feels.$save($scope.commentingMessage.index);
-                //alert("User: "+$scope.currentUser+" is commenting on DFW #"+$scope.commentingMessage.index+". Feel was undefined, user was added.");
+            if($scope.commentingMessage.msg != ""){
+                if ((typeof(currentFeel) !== 'undefined') && (currentFeel.comments)) {
+                    var numCommented = $scope.commentingFeel.comments.length;
+                    //console.log("The feel has " + numCommented + " comment(s).")
+                    currentFeel.comments.push({user: $scope.currentUser, comment: $scope.commentingMessage.msg, date: (new Date()).toLocaleString()});
+                    $scope.feels.$save($scope.commentingMessage.index);
+                    //alert("User: "+$scope.currentUser+" is commenting on DFW #"+$scope.commentingMessage.index+".");
+                }
+                else {
+                    currentFeel.comments = [{
+                        user: $scope.currentUser,
+                        comment: $scope.commentingMessage.msg,
+                        date: (new Date()).toLocaleString()
+                    }];
+                    $scope.feels.$save($scope.commentingMessage.index);
+                    //alert("User: "+$scope.currentUser+" is commenting on DFW #"+$scope.commentingMessage.index+". Feel was undefined, user was added.");
+                }
             }
             $scope.commentingMessage.msg = "";
         };
