@@ -7702,12 +7702,16 @@ ion-content {
 
 .item {
   padding-bottom: 0;
-  background-color: #F4DFFF; }
+  background-color: #F4DFFF;
+  borer-color: #fff; }
   .item p {
     color: #222; }
 
 .color {
   backgound-color: #203948; }
+
+.feeled {
+  color: #9486FF; }
 
 .text-left {
   text-align: left; }
@@ -7724,8 +7728,28 @@ ion-content {
 .like-count {
   text-align: center; }
 
-.timestamp {
+.item .timestamp {
   font-size: .7em;
   font-weight: 300;
   font-style: italic;
   color: #666; }
+
+.feel-count-container {
+  position: relative; }
+
+.feel-count {
+  position: absolute;
+  top: 48%;
+  z-index: 2; }
+
+.stats {
+  font-size: .8em; }
+
+.inline {
+  display: inline; }
+
+.button.button-light.activated {
+  background-color: #DA93FF; }
+
+.feeled {
+  background-color: #DA93FF; }

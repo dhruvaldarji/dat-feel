@@ -531,6 +531,7 @@ angular.module('starter.controllers', [])
 
         // Triggered in the login modal to close it
         $scope.closeComment = function () {
+            $scope.commentingMessage.msg = "";
             $scope.commentModal.hide();
         };
 

@@ -29,24 +29,47 @@
                 <ion-item class="message_item" ng-if="loggedIn" ng-repeat="(id, feel) in feels | reverse">
                     <div class="list-item">
                         <div class="row">
-                            <div class="like-count col-10 col-center" ng-click="feelingItUp(id)">
-                                <p>{{feel.feltBy.length}}</p>
-                                <i class="icon ion-heart"></i>
-                            </div>
-                            <div class="col col-80 post-text item-text-wrap text-wrap">
+                            <div class="col-50 post-text ">
                                 <p>{{feel.user}} <i class="icon ion-trash-b" ng-show="currentUser === feel.user"
                                                     ng-click="deleteFeel(id)"></i></p>
 
-                                <p class="text-wrap">{{feel.feel}}</p>
                             </div>
-                            <div class="comment col-10 col-center" ng-click="comment(id)">
-                                <p>{{feel.comments.length}}</p>
-                                <i class="icon ion-chatbox"></i>
+                            <div class="col-50 text-right">
+                                <p class="timestamp">
+                                    {{feel.date}}
+                                </p>
+
                             </div>
                         </div>
+                        <div class="row item-text-wrap text-wrap">
+                            <div class="col col-100">
+                                <p class="text-wrap">{{feel.feel}}</p>
+
+                            </div>
+                        </div>
+                        <div class="row stats">
+                            <div class="col-50">
+                                <div class="inline" ng-show="feel.feltBy.length>0">
+                                    <i class="icon ion-heart inline"></i>
+
+                                    {{feel.feltBy.length}} Feels
+                                </div>
+                                <div class="inline" ng-show="feel.comments.length>0">
+                                    <i class="icon ion-heart inline"></i>
+
+                                    {{feel.comments.length}} Comments
+                                </div>
+                            </div>
+
+
+                        </div>
                         <div class="row">
-                            <div class="col-offset-50 col-50 text-right timestamp">
-                                {{feel.date}}
+                            <div class="button-bar">
+                                <a ng-show="true" class="button button-light" ng-click="feelingItUp(id)"> <i
+                                        class="icon ion-heart"></i> Feel</a>
+                                <a ng-show="!true" class="button button-light" ng-click="feelingItUp(id)"><i
+                                        class="icon ion-heart"></i> Feeled</a>
+                                <a class="button button-light" ng-click="comment(id)">Comment</a>
                             </div>
                         </div>
                     </div>
