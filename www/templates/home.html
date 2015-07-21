@@ -48,22 +48,18 @@
                         <a ng-show="feel.comments.length  > 1" class="subdued">{{feel.comments.length}} Comments</a>
                     </p>
                 </div>
-                <div class="item tabs tabs-secondary tabs-icon-left">
-                    <a class="tab-item" ng-show="feel.feltBy.length === 0" ng-click="feelingItUp($index)">
-                        <i class="icon ion-heart-broken"></i>
-                        Feel
+                <div class="item row">
+                    <a class="col" ng-show="feel.feltBy.length === 0" ng-click="feelingItUp($index)">
+                        <i style="font-size: medium" class="icon ion-heart-broken"> Feel </i>
                     </a>
-                    <a class="tab-item" ng-hide="feel-feltBy.length === 0" ng-click="feelingItUp($index)">
-                        <i class="icon ion-heart"></i>
-                        Feel
+                    <a class="col tab-item" ng-hide="feel-feltBy.length === 0" ng-click="feelingItUp($index)">
+                        <i style="font-size: medium" class="icon ion-heart"> Feel </i>
                     </a>
-                    <a class="tab-item" ng-click="comment($index)">
-                        <i class="icon ion-chatbox"></i>
-                        Comment
+                    <a class="col tab-item" ng-click="comment($index)">
+                        <i style="font-size: medium" class="icon ion-chatbox"> Comment </i>
                     </a>
-                    <a class="tab-item" ng-show="currentUser === feel.user" ng-click="deleteFeel($index)">
-                        <i class="icon ion-trash-b"></i>
-                        Delete
+                    <a class="col tab-item" ng-show="currentUser === feel.user" ng-click="deleteFeel($index)">
+                        <i style="font-size: medium" class="icon ion-trash-b"> Delete </i>
                     </a>
                 </div>
                 <br>
