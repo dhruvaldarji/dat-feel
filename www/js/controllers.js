@@ -99,7 +99,7 @@ angular.module('starter.controllers', [])
                 template: template
             });
             alertPopup.then(function (res) {
-                console.log("Error: " + error);
+                //console.log("Error: " + error);
             });
         };
 
@@ -354,14 +354,14 @@ angular.module('starter.controllers', [])
 
             // Register with the Ionic Push service.  All parameters are optional.
             $ionicPush.register({
-                canShowAlert: true, //Can pushes show an alert on your screen?
+                canShowAlert: false, //Can pushes show an alert on your screen?
                 canSetBadge: true, //Can pushes update app icon badges?
                 canPlaySound: true, //Can notifications play a sound?
                 canRunActionsOnWake: true, //Can run actions outside the app,
                 onNotification: function (notification) {
                     // Handle new push notifications here
-                    //console.log(notification);
-                    $scope.showAlert("Notification", notification);
+                    console.log("Notification ",notification);
+                    $scope.showAlert("Notification", notification.alert);
                     return true;
                 }
             });
@@ -422,7 +422,7 @@ angular.module('starter.controllers', [])
             var data = {
                 "tokens": allTokens,
                 "notification": {
-                    "alert": $scope.currentUser + ":\n" + PostFeelMessage,
+                    "alert": $scope.currentUser + ":\n"+PostFeelMessage,
                     "ios": {
                         "badge": 1,
                         "sound": "ping.aiff",
@@ -473,11 +473,21 @@ angular.module('starter.controllers', [])
             var num = $scope.feels.length - id - 1;
             var userDeleting = $scope.feels[num].user;
             if ($scope.currentUser === userDeleting) {
-                var isConfirmed = confirm("Are you sure you want to delete DFW #" + num + ".");
-                if (isConfirmed) {
-                    console.log("User: " + userDeleting + ", is deleting DFW " + num + ".");
-                    $scope.feels.$remove(num);
-                }
+
+                var confirmPopup = $ionicPopup.confirm({
+                    title: "Delete Feel",
+                    template: "Are you sure you want to delete DFW #" + num + "."
+                });
+                confirmPopup.then(function (res) {
+                    console.log('Confirmed', res);
+                    if (res) {
+                        console.log("User: " + userDeleting + ", is deleting DFW " + num + ".");
+                        $scope.feels.$remove(num);
+                    } else {
+                        //console.log('Cancelled');
+                    }
+                    return res;
+                });
             }
             else {
                 console.log("User: " + $scope.currentUser + " does not have permission to delete DFW " + num + ".");
@@ -486,15 +496,17 @@ angular.module('starter.controllers', [])
 
         // Feeling a feel (liking) (hearts)
         $scope.feelingItUp = function (id) {
-            //console.log("User: "+$scope.currentUser+", is feeling up DFW #"+num+".");
-            //alert("User: "+$scope.currentUser+" is feeling up DFW #"+num+".");
             var add = true;
             var num = $scope.feels.length - id - 1;
+
+            console.log("User: "+$scope.currentUser+", is feeling up DFW #"+num+".");
+            //alert("User: "+$scope.currentUser+" is feeling up DFW #"+num+".");
+
             var currentFeel = $scope.feels[num];
             var currentUserNum = -1;
             if ((typeof(currentFeel) !== 'undefined') && (currentFeel.feltBy)) {
                 var numFelt = currentFeel.feltBy.length;
-                //console.log("The feel has " + numFelt + " feel(s).")
+                console.log("The feel has " + numFelt + " feel(s).")
                 for (var i = 0; i < numFelt; i++) {
                     if (currentFeel.feltBy[i] === $scope.currentUser) {
                         add = false;
@@ -538,9 +550,10 @@ angular.module('starter.controllers', [])
         // Open the login modal
         $scope.comment = function (id) {
             var num = $scope.feels.length - id - 1;
+            $scope.commentingMessage.id = id;
             $scope.commentingFeel = $scope.feels[num];
             $scope.commentingMessage.index = num;
-            //console.log("Opening Comment Modal for Feel ", $scope.commentingMessage.index);
+            console.log("Opening Comment Modal for Feel #", $scope.commentingMessage.index, " with ID ", $scope.commentingMessage.id);
             $scope.commentModal.show();
         };
 
@@ -665,7 +678,7 @@ angular.module('starter.controllers', [])
             var data = {
                 "tokens": allTokens,
                 "notification": {
-                    "alert": "Message From Admins:\n" + PostFeelMessage,
+                    "alert": "Message From Admin: \n"+PostFeelMessage,
                     "ios": {
                         "badge": 1,
                         "sound": "ping.aiff",

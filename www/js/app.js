@@ -32,7 +32,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngCordova', 'monospaced.elastic
             // The public API key all services will use for this app
             api_key: '23388e70ab4483be754cf84fe8220d9e49baa88c48f5dad4',
             // Set the app to use development pushes
-            dev_push: false
+            dev_push: true
         });
     }])
     .config(function ($stateProvider, $urlRouterProvider) {
@@ -48,6 +48,22 @@ angular.module('starter', ['ionic', 'firebase', 'ngCordova', 'monospaced.elastic
                 views: {
                     'menuContent': {
                         templateUrl: "templates/home.html"
+                    }
+                }
+            })
+            .state('app.home2', {
+                url: "/home2",
+                views: {
+                    'menuContent': {
+                        templateUrl: "templates/home_2.html"
+                    }
+                }
+            })
+            .state('app.home3', {
+                url: "/home3",
+                views: {
+                    'menuContent': {
+                        templateUrl: "templates/home_2.html"
                     }
                 }
             })

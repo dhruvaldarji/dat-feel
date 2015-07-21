@@ -4,21 +4,6 @@
     padding: 0 10px;
 }
 
-/*.message_item {*/
-    /*margin: 0 10px;*/
-    /*padding: 0 10px;*/
-/*}*/
-
-.card {
-    margin: 0 10px;
-    padding: 0 10px;
-}
-
-.list:last-child.card {
-    margin: 0 10px;
-    padding: 0 10px;
-}
-
 .bar-footer {
     overflow: visible !important;
 }
@@ -26,4 +11,9 @@
 .bar-footer textarea {
     resize: none;
     height: 25px;
+}
+
+p {
+    /*overflow: hidden;*/
+    white-space: nowrap;
 }
