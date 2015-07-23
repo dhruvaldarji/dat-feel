@@ -31,8 +31,10 @@ angular.module('starter', ['ionic', 'firebase', 'ngCordova', 'monospaced.elastic
             app_id: '45ec6dc0',
             // The public API key all services will use for this app
             api_key: '23388e70ab4483be754cf84fe8220d9e49baa88c48f5dad4',
+            // The GCM project number
+            gcm_id: '94195404193',
             // Set the app to use development pushes
-            dev_push: true
+            dev_push: false
         });
     }])
     .config(function ($stateProvider, $urlRouterProvider) {

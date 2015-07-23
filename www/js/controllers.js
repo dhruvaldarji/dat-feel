@@ -534,6 +534,21 @@ angular.module('starter.controllers', [])
             }
         };
 
+        $scope.hasFelt = function(id){
+            var num = $scope.feels.length - id - 1;
+
+            var currentFeel = $scope.feels[num];
+            if ((typeof(currentFeel) !== 'undefined') && (currentFeel.feltBy)) {
+                var numFelt = currentFeel.feltBy.length;
+                for (var i = 0; i < numFelt; i++) {
+                    if (currentFeel.feltBy[i] === $scope.currentUser) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         // Create the login modal that we will use later
         $ionicModal.fromTemplateUrl('templates/postComment.html', {
             scope: $scope
@@ -665,7 +680,7 @@ angular.module('starter.controllers', [])
             //list of all tokens
             var allTokens = [];
 
-            //console.log("Adding all user tokens for push");
+            ////console.log("Adding all user tokens for push");
             for (var i = 0; i < $scope.users.length; i++) {
                 if ($scope.users[i].username !== $scope.currentUser) {
                     allTokens.push($scope.users[i].deviceToken);
@@ -691,7 +706,7 @@ angular.module('starter.controllers', [])
                         }
                     },
                     "android": {
-                        "collapseKey": "foo",
+                        "collapseKey": "Feel",
                         "delayWhileIdle": true,
                         "timeToLive": 300,
                         "payload": {

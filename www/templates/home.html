@@ -31,34 +31,35 @@
                 <div class="item item-avatar">
                     <img src="img/icon.png">
 
-                    <h2 style="font-size: smaller">{{feel.user}}</h2>
+                    <h2 style="font-size: medium">{{feel.user}}</h2>
 
                     <p class="timestamp">{{feel.date}}</p>
                 </div>
                 <div class="item item-body item-text-wrap">
-                    <p style="font-size: smaller">{{feel.feel}}</p>
+                    <p style="font-size: medium">{{feel.feel}}</p>
 
-                    <p style="font-size: smaller">
-                        <a ng-show="feel.feltBy.length == 0" class="subdued">No Feels</a>
-                        <a ng-show="feel.feltBy.length == 1" class="subdued">{{feel.feltBy.length}} Feel</a>
-                        <a ng-show="feel.feltBy.length > 1" class="subdued">{{feel.feltBy.length}} Feels</a>
+                    <p style="font-size: smaller" class="row">
 
-                        <a ng-show="feel.comments.length == 0" class="subdued">No Comments</a>
-                        <a ng-show="feel.comments.length == 1" class="subdued">{{feel.comments.length}} Comment</a>
-                        <a ng-show="feel.comments.length  > 1" class="subdued">{{feel.comments.length}} Comments</a>
+                        <a ng-show="feel.feltBy.length == 0" class="col subdued">No Feels</a>
+                        <a ng-show="feel.feltBy.length == 1" class="col subdued">{{feel.feltBy.length}} Feel</a>
+                        <a ng-show="feel.feltBy.length > 1" class="col subdued">{{feel.feltBy.length}} Feels</a>
+
+                        <a ng-show="feel.comments.length == 0" class="col subdued">No Comments</a>
+                        <a ng-show="feel.comments.length == 1" class="col subdued">{{feel.comments.length}} Comment</a>
+                        <a ng-show="feel.comments.length  > 1" class="col subdued">{{feel.comments.length}} Comments</a>
                     </p>
                 </div>
                 <div class="item row">
-                    <a class="col" ng-show="feel.feltBy.length === 0" ng-click="feelingItUp($index)">
+                    <a class="col tab-item" ng-show="hasFelt($index)" ng-click="feelingItUp($index)">
                         <i style="font-size: medium" class="icon ion-heart-broken"> Feel </i>
                     </a>
-                    <a class="col tab-item" ng-hide="feel-feltBy.length === 0" ng-click="feelingItUp($index)">
+                    <a class="col tab-item" ng-hide="hasFelt($index)" ng-click="feelingItUp($index)">
                         <i style="font-size: medium" class="icon ion-heart"> Feel </i>
                     </a>
                     <a class="col tab-item" ng-click="comment($index)">
                         <i style="font-size: medium" class="icon ion-chatbox"> Comment </i>
                     </a>
-                    <a class="col tab-item" ng-show="currentUser === feel.user" ng-click="deleteFeel($index)">
+                    <a class="col tab-item" ng-show="currentUser == feel.user" ng-click="deleteFeel($index)">
                         <i style="font-size: medium" class="icon ion-trash-b"> Delete </i>
                     </a>
                 </div>
