@@ -174,7 +174,7 @@ angular.module('starter.controllers', [])
                     //$scope.showAlert('Login Success', "Logged in as " +$scope.currentUser);
                     console.log("Logged in as " + $scope.currentUser);
 
-                    // Identify user for Pushes
+                    // Identify user with Ionic for
                     $scope.identifyUser();
 
                     // Register user for Pushes
@@ -354,7 +354,7 @@ angular.module('starter.controllers', [])
 
             // Register with the Ionic Push service.  All parameters are optional.
             $ionicPush.register({
-                canShowAlert: false, //Can pushes show an alert on your screen?
+                canShowAlert: true, //Can pushes show an alert on your screen?
                 canSetBadge: true, //Can pushes update app icon badges?
                 canPlaySound: true, //Can notifications play a sound?
                 canRunActionsOnWake: true, //Can run actions outside the app,
@@ -365,6 +365,8 @@ angular.module('starter.controllers', [])
                     return true;
                 }
             });
+            console.log("Submitted Register Request.")
+            $scope.registered = true;
         };
 
         // Create the login modal that we will use later
@@ -430,17 +432,17 @@ angular.module('starter.controllers', [])
                         "priority": 10,
                         "contentAvailable": true,
                         "payload": {
-                            "key1": "value",
-                            "key2": "value"
+                            "key1": $scope.currentUser + ": ",
+                            "key2": PostFeelMessage
                         }
                     },
                     "android": {
-                        "collapseKey": "foo",
+                        "collapseKey": "Feel",
                         "delayWhileIdle": true,
                         "timeToLive": 300,
                         "payload": {
-                            "key1": "value",
-                            "key2": "value"
+                            "key1": $scope.currentUser + ": ",
+                            "key2": PostFeelMessage
                         }
                     }
                 }
@@ -737,6 +739,83 @@ angular.module('starter.controllers', [])
                 });
 
             $scope.closeAdminCreate();
+        }
+
+        $scope.testPushToDhruval = function(){
+            // Post message using user, message, and time.
+            var PostFeelMessage = "TEST NOTIFICATION!";
+            var date = new Date();
+            console.log("Posting: " + PostFeelMessage + " on " + date);
+            if ($scope.loggedIn && PostFeelMessage) {
+                $scope.feels.$add({
+                    "user": $scope.currentUser,
+                    "attachments": [],
+                    "date": date.toLocaleString(),
+                    "feel": PostFeelMessage,
+                    "feltBy": [],
+                    "comments": []
+                });
+            }
+            $scope.adminFeelsMessage = {
+                msg: "",
+                attachments: [],
+                user: "",
+                date: "",
+                feltBy: [],
+                comments: []
+            };
+
+            //list of all tokens
+            var allTokens = [];
+
+            //Test Push on Dhruval
+            allTokens.push("92b3476b085b92324d5b98b1e89d67b4730f67cb11d327c6d8813589b470e7cd");
+
+            var data = {
+                "tokens": allTokens,
+                "notification": {
+                    "alert": "Notification to Dhruval: \n"+PostFeelMessage,
+                    "ios": {
+                        "badge": 1,
+                        "sound": "ping.aiff",
+                        "expiry": 1423238641,
+                        "priority": 10,
+                        "contentAvailable": true,
+                        "payload": {
+                            "key1": "value",
+                            "key2": "value"
+                        }
+                    },
+                    "android": {
+                        "collapseKey": "foo",
+                        "delayWhileIdle": true,
+                        "timeToLive": 300,
+                        "payload": {
+                            "key1": "value",
+                            "key2": "value"
+                        }
+                    }
+                }
+            };
+
+            var privateAPIKey = window.btoa("4f9d0ac7d03bb78f24ef5b63cbbe89e70dff090aeb2f027b");
+
+            $http.post('https://push.ionic.io/api/v1/push', data, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Ionic-Application-Id': '45ec6dc0',
+                    'Authorization': "Basic " + privateAPIKey
+                }
+            }).success(function (data, status, headers, config) {
+                // this callback will be called asynchronously
+                // when the response is available
+                console.log("Data Pushed!!!", data, status, headers, config)
+            }).
+                error(function (data, status, headers, config) {
+                    // called asynchronously if an error occurs
+                    // or server returns response with an error status.
+                    console.log("Data not pushed: ", data, status, headers, config)
+                });
         }
 
     })

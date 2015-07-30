@@ -53,22 +53,6 @@ angular.module('starter', ['ionic', 'firebase', 'ngCordova', 'monospaced.elastic
                     }
                 }
             })
-            .state('app.home2', {
-                url: "/home2",
-                views: {
-                    'menuContent': {
-                        templateUrl: "templates/home_2.html"
-                    }
-                }
-            })
-            .state('app.home3', {
-                url: "/home3",
-                views: {
-                    'menuContent': {
-                        templateUrl: "templates/home_2.html"
-                    }
-                }
-            })
             .state('app.account', {
                 url: "/account",
                 views: {
