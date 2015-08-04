@@ -34,17 +34,9 @@
                 </ion-item>
 
                 <!--Testing Push-->
-
-                <ion-item menu-close ng-show="isAdmin" ng-click="identifyUser()">
-                    Identify User
+                <ion-item menu-close ng-show="isAdmin" ui-sref="app.test_push">
+                    Testing Push
                 </ion-item>
-                <ion-item menu-close ng-show="isAdmin && identified" ng-click="pushRegister()">
-                    Register For Push
-                </ion-item>
-                <ion-item menu-close ng-show="isAdmin && registered" ng-click="testPushToDhruval()">
-                    Test Push to Dhruval
-                </ion-item>
-
             </ion-list>
         </ion-content>
     </ion-side-menu>

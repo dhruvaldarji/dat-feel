@@ -34,7 +34,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngCordova', 'monospaced.elastic
             // The GCM project number
             gcm_id: '94195404193',
             // Set the app to use development pushes
-            dev_push: false
+            dev_push: true
         });
     }])
     .config(function ($stateProvider, $urlRouterProvider) {
@@ -58,6 +58,14 @@ angular.module('starter', ['ionic', 'firebase', 'ngCordova', 'monospaced.elastic
                 views: {
                     'menuContent': {
                         templateUrl: "templates/account.html"
+                    }
+                }
+            })
+            .state('app.test_push', {
+                url: "/test_push",
+                views: {
+                    'menuContent': {
+                        templateUrl: "templates/testPush.html"
                     }
                 }
             });
