@@ -354,7 +354,7 @@ angular.module('starter.controllers', [])
 
             // Register with the Ionic Push service.  All parameters are optional.
             $ionicPush.register({
-                canShowAlert: true, //Can pushes show an alert on your screen?
+                canShowAlert: false, //Can pushes show an alert on your screen?
                 canSetBadge: true, //Can pushes update app icon badges?
                 canPlaySound: true, //Can notifications play a sound?
                 canRunActionsOnWake: true, //Can run actions outside the app,
@@ -401,6 +401,63 @@ angular.module('starter.controllers', [])
                     "feltBy": [],
                     "comments": []
                 });
+
+                ////list of all tokens
+                //var allTokens = [];
+                //
+                //console.log("Adding all user tokens for push");
+                //for (var i = 0; i < $scope.users.length; i++) {
+                //    if ($scope.users[i].username !== $scope.currentUser) {
+                //        allTokens.push($scope.users[i].deviceToken);
+                //    }
+                //}
+                //
+                //var data = {
+                //    "tokens": allTokens,
+                //    "notification": {
+                //        "alert": $scope.currentUser + ":\n"+PostFeelMessage,
+                //        "ios": {
+                //            "badge": 1,
+                //            "sound": "ping.aiff",
+                //            "expiry": 1423238641,
+                //            "priority": 10,
+                //            "contentAvailable": true,
+                //            "payload": {
+                //                "key1": $scope.currentUser + ": ",
+                //                "key2": PostFeelMessage
+                //            }
+                //        },
+                //        "android": {
+                //            "collapseKey": "Feel",
+                //            "delayWhileIdle": true,
+                //            "timeToLive": 300,
+                //            "payload": {
+                //                "key1": $scope.currentUser + ": ",
+                //                "key2": PostFeelMessage
+                //            }
+                //        }
+                //    }
+                //}
+                //
+                //var privateAPIKey = window.btoa("4f9d0ac7d03bb78f24ef5b63cbbe89e70dff090aeb2f027b");
+                //
+                //$http.post('https://push.ionic.io/api/v1/push', data, {
+                //    headers: {
+                //        'Content-Type': 'application/json',
+                //        'X-Ionic-Application-Id': '45ec6dc0',
+                //        'Authorization': "Basic " + privateAPIKey
+                //    }
+                //}).success(function (data, status, headers, config) {
+                //    // this callback will be called asynchronously
+                //    // when the response is available
+                //    console.log("Data Pushed!!!", data, status, headers, config)
+                //}).
+                //    error(function (data, status, headers, config) {
+                //        // called asynchronously if an error occurs
+                //        // or server returns response with an error status.
+                //        console.log("Data not pushed: ", data, status, headers, config)
+                //    });
+
             }
             $scope.feelsMessage = {
                 msg: "",
@@ -411,64 +468,8 @@ angular.module('starter.controllers', [])
                 comments: []
             };
 
-            //list of all tokens
-            var allTokens = [];
-
-            console.log("Adding all user tokens for push");
-            for (var i = 0; i < $scope.users.length; i++) {
-                if ($scope.users[i].username !== $scope.currentUser) {
-                    allTokens.push($scope.users[i].deviceToken);
-                }
-            }
-
-            var data = {
-                "tokens": allTokens,
-                "notification": {
-                    "alert": $scope.currentUser + ":\n"+PostFeelMessage,
-                    "ios": {
-                        "badge": 1,
-                        "sound": "ping.aiff",
-                        "expiry": 1423238641,
-                        "priority": 10,
-                        "contentAvailable": true,
-                        "payload": {
-                            "key1": $scope.currentUser + ": ",
-                            "key2": PostFeelMessage
-                        }
-                    },
-                    "android": {
-                        "collapseKey": "Feel",
-                        "delayWhileIdle": true,
-                        "timeToLive": 300,
-                        "payload": {
-                            "key1": $scope.currentUser + ": ",
-                            "key2": PostFeelMessage
-                        }
-                    }
-                }
-            }
-
-            var privateAPIKey = window.btoa("4f9d0ac7d03bb78f24ef5b63cbbe89e70dff090aeb2f027b");
-
-            $http.post('https://push.ionic.io/api/v1/push', data, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Ionic-Application-Id': '45ec6dc0',
-                    'Authorization': "Basic " + privateAPIKey
-                }
-            }).success(function (data, status, headers, config) {
-                // this callback will be called asynchronously
-                // when the response is available
-                console.log("Data Pushed!!!", data, status, headers, config)
-            }).
-                error(function (data, status, headers, config) {
-                    // called asynchronously if an error occurs
-                    // or server returns response with an error status.
-                    console.log("Data not pushed: ", data, status, headers, config)
-                });
-
             $scope.closeCreate();
-        }
+        };
 
         // Delete a feel from the DB
         $scope.deleteFeel = function (id) {
@@ -494,7 +495,7 @@ angular.module('starter.controllers', [])
             else {
                 console.log("User: " + $scope.currentUser + " does not have permission to delete DFW " + num + ".");
             }
-        }
+        };
 
         // Feeling a feel (liking) (hearts)
         $scope.feelingItUp = function (id) {
@@ -549,7 +550,7 @@ angular.module('starter.controllers', [])
                 }
             }
             return false;
-        }
+        };
 
         // Create the login modal that we will use later
         $ionicModal.fromTemplateUrl('templates/postComment.html', {
@@ -669,6 +670,65 @@ angular.module('starter.controllers', [])
                     "feltBy": [],
                     "comments": []
                 });
+
+                //list of all tokens
+                var allTokens = [];
+
+                ////console.log("Adding all user tokens for push");
+                for (var i = 0; i < $scope.users.length; i++) {
+                    if ($scope.users[i].username !== $scope.currentUser) {
+                        allTokens.push($scope.users[i].deviceToken);
+                    }
+                }
+
+                //Test Push on Dhruval
+                //allTokens.push("92b3476b085b92324d5b98b1e89d67b4730f67cb11d327c6d8813589b470e7cd");
+
+                var data = {
+                    "tokens": allTokens,
+                    "notification": {
+                        "alert": "Message From Admin: \n"+PostFeelMessage,
+                        "ios": {
+                            "badge": 1,
+                            "sound": "ping.aiff",
+                            "expiry": 1423238641,
+                            "priority": 10,
+                            "contentAvailable": true,
+                            "payload": {
+                                "key1": "Message From Admins",
+                                "key2": PostFeelMessage
+                            }
+                        },
+                        "android": {
+                            "collapseKey": "Feel",
+                            "delayWhileIdle": true,
+                            "timeToLive": 300,
+                            "payload": {
+                                "key1": "Message From Admins",
+                                "key2": PostFeelMessage
+                            }
+                        }
+                    }
+                }
+
+                var privateAPIKey = window.btoa("4f9d0ac7d03bb78f24ef5b63cbbe89e70dff090aeb2f027b");
+
+                $http.post('https://push.ionic.io/api/v1/push', data, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Ionic-Application-Id': '45ec6dc0',
+                        'Authorization': "Basic " + privateAPIKey
+                    }
+                }).success(function (data, status, headers, config) {
+                    // this callback will be called asynchronously
+                    // when the response is available
+                    console.log("Data Pushed!!!", data, status, headers, config)
+                }).
+                    error(function (data, status, headers, config) {
+                        // called asynchronously if an error occurs
+                        // or server returns response with an error status.
+                        console.log("Data not pushed: ", data, status, headers, config)
+                    });
             }
             $scope.adminFeelsMessage = {
                 msg: "",
@@ -678,65 +738,6 @@ angular.module('starter.controllers', [])
                 feltBy: [],
                 comments: []
             };
-
-            //list of all tokens
-            var allTokens = [];
-
-            ////console.log("Adding all user tokens for push");
-            for (var i = 0; i < $scope.users.length; i++) {
-                if ($scope.users[i].username !== $scope.currentUser) {
-                    allTokens.push($scope.users[i].deviceToken);
-                }
-            }
-
-            //Test Push on Dhruval
-            //allTokens.push("92b3476b085b92324d5b98b1e89d67b4730f67cb11d327c6d8813589b470e7cd");
-
-            var data = {
-                "tokens": allTokens,
-                "notification": {
-                    "alert": "Message From Admin: \n"+PostFeelMessage,
-                    "ios": {
-                        "badge": 1,
-                        "sound": "ping.aiff",
-                        "expiry": 1423238641,
-                        "priority": 10,
-                        "contentAvailable": true,
-                        "payload": {
-                            "key1": "Message From Admins",
-                            "key2": PostFeelMessage
-                        }
-                    },
-                    "android": {
-                        "collapseKey": "Feel",
-                        "delayWhileIdle": true,
-                        "timeToLive": 300,
-                        "payload": {
-                            "key1": "Message From Admins",
-                            "key2": PostFeelMessage
-                        }
-                    }
-                }
-            }
-
-            var privateAPIKey = window.btoa("4f9d0ac7d03bb78f24ef5b63cbbe89e70dff090aeb2f027b");
-
-            $http.post('https://push.ionic.io/api/v1/push', data, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Ionic-Application-Id': '45ec6dc0',
-                    'Authorization': "Basic " + privateAPIKey
-                }
-            }).success(function (data, status, headers, config) {
-                // this callback will be called asynchronously
-                // when the response is available
-                console.log("Data Pushed!!!", data, status, headers, config)
-            }).
-                error(function (data, status, headers, config) {
-                    // called asynchronously if an error occurs
-                    // or server returns response with an error status.
-                    console.log("Data not pushed: ", data, status, headers, config)
-                });
 
             $scope.closeAdminCreate();
         };
@@ -767,6 +768,13 @@ angular.module('starter.controllers', [])
 
             //list of all tokens
             var allTokens = [];
+
+            //console.log("Adding all user tokens for push");
+            //for (var i = 0; i < $scope.users.length; i++) {
+            //    if ($scope.users[i].username !== $scope.currentUser) {
+            //        allTokens.push($scope.users[i].deviceToken);
+            //    }
+            //}
 
             //Test Push on Dhruval
             allTokens.push("d5ae923cae767a98a5f7232a989cde4ed48d5eca49eaab95b2f5b180b4e3791b");
