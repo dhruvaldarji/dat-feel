@@ -99,7 +99,7 @@ angular.module('starter.controllers', [])
                 template: template
             });
             alertPopup.then(function (res) {
-                //console.log("Error: " + error);
+                console.log("Error: " + error);
             });
         };
 
@@ -109,12 +109,18 @@ angular.module('starter.controllers', [])
         });
 
         $scope.homeInit = function () {
+            $scope.loginData = {
+                username: "",
+                password: "",
+                remember: false
+            };
+
             if (!$scope.loggedIn) {
                 console.log("No one is logged in, checking local storage.");
 
                 var loginInfo = $localstorage.getObject('loginData').loginData;
                 console.log("Localstorage: ", loginInfo);
-                if ($scope.loginData.remember === undefined) {
+                if (loginInfo == undefined|| loginInfo.username == undefined) {
                     console.log("No login is saved, please login with email and password.");
                     $scope.loginData = {
                         username: "",
@@ -162,9 +168,10 @@ angular.module('starter.controllers', [])
                 password: $scope.loginData.password
             }, function (error, authData) {
                 if (error) {
+                    console.log("Login Failed: ", error);
                     // An alert dialog
                     $scope.showAlert('Login Failed', error);
-                    console.log("Login Failed: ", error);
+                    $scope.loggedIn = false;
                 } else {
                     console.log("Successfully logged in account with username:", authData.password.email);
                     $scope.currentUser = authData.password.email;
@@ -174,11 +181,11 @@ angular.module('starter.controllers', [])
                     //$scope.showAlert('Login Success', "Logged in as " +$scope.currentUser);
                     console.log("Logged in as " + $scope.currentUser);
 
-                    // Identify user with Ionic for
-                    $scope.identifyUser();
-
-                    // Register user for Pushes
-                    $scope.pushRegister();
+                    //// Identify user with Ionic for
+                    //$scope.identifyUser();
+                    //
+                    //// Register user for Pushes
+                    //$scope.pushRegister();
                 }
 
                 // Simulate a login delay. Remove this and replace with your login
@@ -200,11 +207,11 @@ angular.module('starter.controllers', [])
                                 loginData: $scope.loginData
                             });
                         }
+                        $scope.closeLogin();
                     }
-                    $scope.closeLogin();
-                    $scope.hideLoading();
                 }, 1000);
             });
+            $scope.hideLoading();
         };
 
         $scope.doLogout = function () {
