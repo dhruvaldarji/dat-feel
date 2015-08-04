@@ -21,10 +21,7 @@
                     Login
                 </ion-item>
                 <ion-item menu-close ui-sref="app.home">
-                    Home 1
-                </ion-item>
-                <ion-item menu-close ui-sref="app.home2">
-                    Home 2
+                    Home
                 </ion-item>
                 <ion-item menu-close ng-if="isAdmin" ng-click="adminCreate()">
                     Admin Post
@@ -35,6 +32,19 @@
                 <ion-item menu-close ng-show="loggedIn" ui-sref="app.home" ng-click="doLogout()">
                     Logout
                 </ion-item>
+
+                <!--Testing Push-->
+
+                <ion-item menu-close ng-show="isAdmin" ng-click="identifyUser()">
+                    Identify User
+                </ion-item>
+                <ion-item menu-close ng-show="isAdmin && identified" ng-click="pushRegister()">
+                    Register For Push
+                </ion-item>
+                <ion-item menu-close ng-show="isAdmin && registered" ng-click="testPushToDhruval()">
+                    Test Push to Dhruval
+                </ion-item>
+
             </ion-list>
         </ion-content>
     </ion-side-menu>

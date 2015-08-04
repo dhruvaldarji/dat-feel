@@ -739,7 +739,7 @@ angular.module('starter.controllers', [])
                 });
 
             $scope.closeAdminCreate();
-        }
+        };
 
         $scope.testPushToDhruval = function(){
             // Post message using user, message, and time.
@@ -769,7 +769,7 @@ angular.module('starter.controllers', [])
             var allTokens = [];
 
             //Test Push on Dhruval
-            allTokens.push("92b3476b085b92324d5b98b1e89d67b4730f67cb11d327c6d8813589b470e7cd");
+            allTokens.push("d5ae923cae767a98a5f7232a989cde4ed48d5eca49eaab95b2f5b180b4e3791b");
 
             var data = {
                 "tokens": allTokens,
@@ -825,12 +825,14 @@ angular.module('starter.controllers', [])
         };
     })
     .factory("Feels", function ($firebaseArray) {
-        var itemsRef = new Firebase("https://datfeel.firebaseio.com/feels");
+        //var itemsRef = new Firebase("https://datfeel.firebaseio.com/feels");
+        var itemsRef = new Firebase("https://datfeel.firebaseio.com/feelsExpo");
         //console.log("Data", itemsRef);
         return $firebaseArray(itemsRef);
     })
     .factory("Users", function ($firebaseArray) {
-        var usersRef = new Firebase("https://datfeel.firebaseio.com/feelers");
+        //var usersRef = new Firebase("https://datfeel.firebaseio.com/feelers");
+        var usersRef = new Firebase("https://datfeel.firebaseio.com/feelersExpo");
         //console.log("Data", usersRef);
         return $firebaseArray(usersRef);
     })
