@@ -99,17 +99,23 @@ angular.module('starter.controllers', [])
                 template: template
             });
             alertPopup.then(function (res) {
-                //console.log("Error: " + error);
+                console.log("Error: " + error);
             });
         };
 
         $scope.homeInit = function () {
+            $scope.loginData = {
+                username: "",
+                password: "",
+                remember: false
+            };
+
             if (!$scope.loggedIn) {
                 console.log("No one is logged in, checking local storage.");
 
                 var loginInfo = $localstorage.getObject('loginData').loginData;
                 console.log("Localstorage: ", loginInfo);
-                if ($scope.loginData.remember === undefined) {
+                if (loginInfo == undefined|| loginInfo.username == undefined) {
                     console.log("No login is saved, please login with email and password.");
                     $scope.loginData = {
                         username: "",
@@ -157,9 +163,10 @@ angular.module('starter.controllers', [])
                 password: $scope.loginData.password
             }, function (error, authData) {
                 if (error) {
+                    console.log("Login Failed: ", error);
                     // An alert dialog
                     $scope.showAlert('Login Failed', error);
-                    console.log("Login Failed: ", error);
+                    $scope.loggedIn = false;
                 } else {
                     console.log("Successfully logged in account with username:", authData.password.email);
                     $scope.currentUser = authData.password.email;
@@ -730,23 +737,23 @@ angular.module('starter.controllers', [])
                 comments: []
             };
 
-            $scope.closeAdminCreate();
-        };
-
-        $scope.testPushToDhruval = function(){
-            // Post message using user, message, and time.
-            var PostFeelMessage = "TEST NOTIFICATION!";
-
             //list of all tokens
             var allTokens = [];
 
+            ////console.log("Adding all user tokens for push");
+            for (var i = 0; i < $scope.users.length; i++) {
+                if ($scope.users[i].username !== $scope.currentUser) {
+                    allTokens.push($scope.users[i].deviceToken);
+                }
+            }
+
             //Test Push on Dhruval
-            allTokens.push("d5ae923cae767a98a5f7232a989cde4ed48d5eca49eaab95b2f5b180b4e3791b");
+            //allTokens.push("92b3476b085b92324d5b98b1e89d67b4730f67cb11d327c6d8813589b470e7cd");
 
             var data = {
                 "tokens": allTokens,
                 "notification": {
-                    "alert": "Notification to Dhruval: \n"+PostFeelMessage,
+                    "alert": "Message From Admin: \n"+PostFeelMessage,
                     "ios": {
                         "badge": 1,
                         "sound": "ping.aiff",
@@ -754,8 +761,8 @@ angular.module('starter.controllers', [])
                         "priority": 10,
                         "contentAvailable": true,
                         "payload": {
-                            "key1": "value",
-                            "key2": "value"
+                            "key1": "Message From Admins",
+                            "key2": PostFeelMessage
                         }
                     },
                     "android": {
