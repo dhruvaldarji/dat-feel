@@ -1,0 +1,22 @@
+{
+    "com.ionic.keyboard": {
+        "source": {
+            "type": "registry",
+            "id": "com.ionic.keyboard"
+        }
+    },
+    "com.phonegap.plugins.PushPlugin": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/phonegap-build/PushPlugin.git",
+            "subdir": "."
+        }
+    },
+    "com.ionic.deploy": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/driftyco/ionic-plugins-deploy",
+            "subdir": "."
+        }
+    }
+}

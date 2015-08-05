@@ -1,0 +1,91 @@
+<ion-modal-view view-title="Comment">
+    <ion-header-bar class="bar-energized">
+        <div class="buttons">
+            <button class="button button-clear ion-close" ng-click="closeComment()"></button>
+        </div>
+        <!--<div class="buttons">-->
+        <!--<button class="button button-balanced ng-click="postFeel()">Feel</button>-->
+        <!--</div>-->
+    </ion-header-bar>
+    <ion-content>
+        <ion-list class="message_list color">
+            <div class="item item-avatar">
+                <img src="img/icon.png">
+
+                <h2 style="font-size: smaller">{{commentingFeel.user}}</h2>
+
+                <p class="timestamp">{{commentingFeel.date}}</p>
+            </div>
+            <div class="item item-body item-text-wrap">
+                <p style="font-size: smaller">{{commentingFeel.feel}}</p>
+
+                <p>
+                    <a ng-show="commentingFeel.feltBy.length == 0" class="subdued">No Feels</a>
+                    <a ng-show="commentingFeel.feltBy.length == 1" class="subdued">{{commentingFeel.feltBy.length}}
+                        Feel</a>
+                    <a ng-show="commentingFeel.feltBy.length > 1" class="subdued">{{commentingFeel.feltBy.length}}
+                        Feels</a>
+
+                    <a ng-show="commentingFeel.comments.length == 0" class="subdued">No Comments</a>
+                    <a ng-show="commentingFeel.comments.length == 1" class="subdued">{{commentingFeel.comments.length}}
+                        Comment</a>
+                    <a ng-show="commentingFeel.comments.length  > 1" class="subdued">{{commentingFeel.comments.length}}
+                        Comments</a>
+                </p>
+            </div>
+            <div class="row item">
+                <a class="tab-item col col-50" ng-show="hasFelt(commentingMessage.id)" ng-click="feelingItUp(commentingMessage.id)">
+                    <i style="font-size: medium" class="icon ion-heart-broken assertive"> Unfeel </i>
+                </a>
+                <a class="tab-item col col-50" ng-hide="hasFelt(commentingMessage.id)" ng-click="feelingItUp(commentingMessage.id)">
+                    <i style="font-size: medium" class="icon ion-heart energized"> Feel </i>
+                </a>
+                <a class="tab-item col col-50" ng-show="currentUser == commentingFeel.user" ng-click="deleteFeel(commentingMessage.id)">
+                    <i style="font-size: medium" class="icon ion-trash-b assertive"> Delete </i>
+                </a>
+            </div>
+            <div class="item col-offset-5" ng-repeat="(id, comment) in commentingFeel.comments">
+                <!--<div class="like-count col-10 col-center" ng-click="feelingItUp(id)">-->
+                <!--&lt;!&ndash;<p>{{comment.feltBy.length}}</p>&ndash;&gt;-->
+                <!--<i class="icon ion-heart"></i>-->
+                <!--</div>-->
+
+                <div class="row">
+                    <div class="col-90 item-avatar">
+                        <img style="text-align: center; align-content: center" src="img/icon.png">
+
+                        <h2 style="font-size: smaller">{{comment.user}}</h2>
+
+                        <p class="timestamp">{{comment.date}}</p>
+
+                        <div class="item-text-wrap">
+                            <p style="font-size: smaller">{{comment.comment}}</p>
+                        </div>
+                    </div>
+                    <div class="col col-offset-5 col-10 ">
+                        <a ng-show="currentUser === comment.user"
+                           ng-click="deleteComment(id)">
+                            <i class="tab icon ion-trash-b" style="font-size: large"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </ion-list>
+        <!--<label class="alert alert-danger assertive" style="text-align: center"-->
+               <!--ng-show="commentInput.commentArea.$error.required && commentInput.commentArea.$dirty">-->
+            <!--Please enter your Comment!-->
+        <!--</label>-->
+    </ion-content>
+    <ion-footer-bar class="bar-energized item-input-inset message-footer" ng-form="commentInput" ng-submit="commentOnFeel()" style="height: auto" keyboard-attach>
+            <label class="item-input-wrapper">
+                <textarea name="commentArea" required class="animate msd-elastic: \n;" minlength="1" maxlength="200"
+                          placeholder="Comment on this Feel..." style="width: 100%;"
+                          ng-model="commentingMessage.msg">
+                </textarea>
+            </label>
+            <div class="footer-btn-wrap">
+                <button ng-disabled="commentInput.$invalid" class="button button-icon icon ion-paper-airplane footer-btn"
+                        type="submit"></button>
+            </div>
+    </ion-footer-bar>
+</ion-modal-view>
