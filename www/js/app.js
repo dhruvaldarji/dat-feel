@@ -34,7 +34,7 @@ angular.module('starter', ['ionic','ionic.service.core','ionic.service.deploy', 
             // The GCM project number
             gcm_id: '94195404193',
             // Set the app to use development pushes
-            dev_push: false
+            dev_push: true
         });
     }])
     .config(function ($stateProvider, $urlRouterProvider) {

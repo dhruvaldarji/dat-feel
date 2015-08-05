@@ -163,8 +163,9 @@ angular.module('starter.controllers', [])
         ionic.Platform.ready(function(){
             // will execute when device is ready, or immediately if the device is already ready.
             console.log("Application Start...");
-            $scope.showLoading();
             $scope.checkForUpdates();
+            $scope.showLoading();
+
             //console.log("Updates Checked. Available: ",$scope.hasUpdate);
             //if($scope.hasUpdate){
             //    console.log("Updating Application...");
@@ -182,6 +183,7 @@ angular.module('starter.controllers', [])
             $scope.showLoading();
             $scope.loginModal = modal;
             $scope.login();
+            $scope.hideLoading();
         });
 
         $scope.login = function () {
