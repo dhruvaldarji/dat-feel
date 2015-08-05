@@ -27,21 +27,25 @@ angular.module('starter.controllers', [])
 
         // Update app code with new release from Ionic Deploy
         $scope.doUpdate = function() {
+            $scope.showLoading();
             $ionicDeploy.update().then(function(res) {
                 console.log('Ionic Deploy: Update Success! ', res);
+
             }, function(err) {
                 console.log('Ionic Deploy: Update error! ', err);
             }, function(prog) {
                 console.log('Ionic Deploy: Progress... ', prog);
             });
+            $scope.hideLoading();
         };
-
+        $scope.hasUpdate = false;
         // Check Ionic Deploy for new code
         $scope.checkForUpdates = function() {
             console.log('Ionic Deploy: Checking for updates');
             $ionicDeploy.check().then(function(hasUpdate) {
                 console.log('Ionic Deploy: Update available: ' + hasUpdate);
                 $scope.hasUpdate = hasUpdate;
+                $scope.doUpdate();
             }, function(err) {
                 console.error('Ionic Deploy: Unable to check for updates', err);
             });
@@ -161,9 +165,12 @@ angular.module('starter.controllers', [])
             console.log("Application Start...");
             $scope.showLoading();
             $scope.checkForUpdates();
-            if($scope.hasUpdate){
-                $scope.doUpdate();
-            }
+            //console.log("Updates Checked. Available: ",$scope.hasUpdate);
+            //if($scope.hasUpdate){
+            //    console.log("Updating Application...");
+            //    $scope.doUpdate();
+            //}
+            $scope.homeInit();
             $scope.hideLoading();
         });
 
@@ -172,6 +179,7 @@ angular.module('starter.controllers', [])
             scope: $scope,
             animation: 'slide-in-up'
         }).then(function (modal) {
+            $scope.showLoading();
             $scope.loginModal = modal;
             $scope.login();
         });
