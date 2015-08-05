@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'firebase', 'ngCordova', 'monospaced.elastic', 'ionic.service.core',
+angular.module('starter', ['ionic','ionic.service.core', 'firebase', 'ngCordova', 'monospaced.elastic', 
     'ionic.service.analytics', 'ionic.service.push', 'starter.controllers'])
 
     .run(function ($ionicPlatform, $ionicAnalytics) {
@@ -34,7 +34,7 @@ angular.module('starter', ['ionic', 'firebase', 'ngCordova', 'monospaced.elastic
             // The GCM project number
             gcm_id: '94195404193',
             // Set the app to use development pushes
-            dev_push: true
+            dev_push: false
         });
     }])
     .config(function ($stateProvider, $urlRouterProvider) {
