@@ -1,0 +1,12 @@
+{
+  "name": "Dat Feel",
+  "app_id": "45ec6dc0",
+  "gulpStartupTasks": [
+    "sass",
+    "watch"
+  ],
+  "watchPatterns": [
+    "www/**/*",
+    "!www/lib/**/*"
+  ]
+}

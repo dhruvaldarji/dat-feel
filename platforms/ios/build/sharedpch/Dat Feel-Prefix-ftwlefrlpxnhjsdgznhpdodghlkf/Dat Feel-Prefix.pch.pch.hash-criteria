@@ -1,0 +1,25 @@
+-x
+c
+-arch
+armv7
+-std=c99
+-gmodules
+-fpascal-strings
+-O0
+-isysroot
+/Applications/Xcode-beta.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.0.sdk
+-miphoneos-version-min=8.0
+-g
+-fvisibility=hidden
+-fembed-bitcode-marker
+-iquote
+-iquote
+-I/Users/owner/Desktop/DatFeel/DatFeel-Mobile/DatFeel/platforms/ios/build/device/include
+-I/Users/owner/Desktop/DatFeel/DatFeel-Mobile/DatFeel/platforms/ios/build/device/usr/local/lib/include
+-I/Users/owner/Desktop/DatFeel/DatFeel-Mobile/DatFeel/platforms/ios/build/UninstalledProducts/include
+-I/Users/owner/Desktop/DatFeel/DatFeel-Mobile/DatFeel/platforms/ios/build/device
+-F/Users/owner/Desktop/DatFeel/DatFeel-Mobile/DatFeel/platforms/ios/build/device
+arm-apple-darwin15.0.0
+"4.2.1 Compatible Apple LLVM 7.0.0 (clang-700.0.53)"
+SDK_PRODUCT_BUILD_VERSION=13A4254u
+13A4254u

@@ -1,0 +1,78 @@
+/*
+To customize the look and feel of Ionic, you can override the variables
+in ionic's _variables.scss file.
+
+For example, you might change some of the default colors:
+
+$light:                           #fff !default;
+$stable:                          #f8f8f8 !default;
+$positive:                        #387ef5 !default;
+$calm:                            #11c1f3 !default;
+$balanced:                        #33cd5f !default;
+$energized:                       #ffc900 !default;
+$assertive:                       #ef473a !default;
+$royal:                           #886aea !default;
+$dark:                            #444 !default;
+*/
+
+// The path for our ionicons font files, relative to the built CSS in www/css
+$ionicons-font-path: "../lib/ionic/fonts" !default;
+$stable: #a466c3 !default;
+$energized: #6D497F !default;
+$light: #F4DFFF !default;
+$calm: #7A707F !default;
+// Include all of Ionic
+@import "../www/lib/ionic/scss/ionic";
+
+ion-content {
+  background: $light;
+}
+
+.message_list {
+  /*margin: 0 10px;*/
+  padding: 0 10px;
+}
+
+.list-item {
+}
+
+.item {
+  padding-bottom: 0;
+  background-color: #F4DFFF;
+  p {
+    color: #222;
+  }
+
+}
+
+.color {
+  backgound-color: #203948;
+
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-wrapper {
+  white-space: normal;
+}
+
+.like-count {
+  text-align: center;
+}
+
+.timestamp {
+  font-size: .7em;
+  font-weight: 300;
+  font-style: italic;
+  color: #666;
+}

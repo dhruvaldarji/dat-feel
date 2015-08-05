@@ -1,0 +1,21 @@
+/Users/owner/Desktop/DatFeel/DatFeel-Mobile/DatFeel/platforms/android/ant-build/classes.dex : \
+/Users/owner/Desktop/DatFeel/DatFeel-Mobile/DatFeel/platforms/android/ant-build/classes/com/ddarji/datfeel/BuildConfig.class \
+/Users/owner/Desktop/DatFeel/DatFeel-Mobile/DatFeel/platforms/android/ant-build/classes/com/ddarji/datfeel/MainActivity.class \
+/Users/owner/Desktop/DatFeel/DatFeel-Mobile/DatFeel/platforms/android/ant-build/classes/com/ddarji/datfeel/Manifest$permission.class \
+/Users/owner/Desktop/DatFeel/DatFeel-Mobile/DatFeel/platforms/android/ant-build/classes/com/ddarji/datfeel/Manifest.class \
+/Users/owner/Desktop/DatFeel/DatFeel-Mobile/DatFeel/platforms/android/ant-build/classes/com/ddarji/datfeel/R$attr.class \
+/Users/owner/Desktop/DatFeel/DatFeel-Mobile/DatFeel/platforms/android/ant-build/classes/com/ddarji/datfeel/R$drawable.class \
+/Users/owner/Desktop/DatFeel/DatFeel-Mobile/DatFeel/platforms/android/ant-build/classes/com/ddarji/datfeel/R$string.class \
+/Users/owner/Desktop/DatFeel/DatFeel-Mobile/DatFeel/platforms/android/ant-build/classes/com/ddarji/datfeel/R$xml.class \
+/Users/owner/Desktop/DatFeel/DatFeel-Mobile/DatFeel/platforms/android/ant-build/classes/com/ddarji/datfeel/R.class \
+/Users/owner/Desktop/DatFeel/DatFeel-Mobile/DatFeel/platforms/android/ant-build/classes/com/ionic/keyboard/IonicKeyboard$1.class \
+/Users/owner/Desktop/DatFeel/DatFeel-Mobile/DatFeel/platforms/android/ant-build/classes/com/ionic/keyboard/IonicKeyboard$2.class \
+/Users/owner/Desktop/DatFeel/DatFeel-Mobile/DatFeel/platforms/android/ant-build/classes/com/ionic/keyboard/IonicKeyboard$3.class \
+/Users/owner/Desktop/DatFeel/DatFeel-Mobile/DatFeel/platforms/android/ant-build/classes/com/ionic/keyboard/IonicKeyboard.class \
+/Users/owner/Desktop/DatFeel/DatFeel-Mobile/DatFeel/platforms/android/ant-build/classes/com/plugin/gcm/CordovaGCMBroadcastReceiver.class \
+/Users/owner/Desktop/DatFeel/DatFeel-Mobile/DatFeel/platforms/android/ant-build/classes/com/plugin/gcm/GCMIntentService.class \
+/Users/owner/Desktop/DatFeel/DatFeel-Mobile/DatFeel/platforms/android/ant-build/classes/com/plugin/gcm/PushHandlerActivity.class \
+/Users/owner/Desktop/DatFeel/DatFeel-Mobile/DatFeel/platforms/android/ant-build/classes/com/plugin/gcm/PushPlugin.class \
+/Users/owner/Desktop/DatFeel/DatFeel-Mobile/DatFeel/platforms/android/ant-build/dexedLibs/classes-0bf5188894aa19521a7b5453c71f13f1.jar \
+/Users/owner/Desktop/DatFeel/DatFeel-Mobile/DatFeel/platforms/android/ant-build/dexedLibs/gcm-03d95a9ccf3c4dba4d422eb90e5950e5.jar \
+/Users/owner/Desktop/DatFeel/DatFeel-Mobile/DatFeel/platforms/android/ant-build/dexedLibs/android-support-v13-d0bd6b532ee9921a2da77d2f1d25314c.jar \

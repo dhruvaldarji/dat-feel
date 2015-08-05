@@ -1,0 +1,39 @@
+<ion-modal-view view-title="Login">
+    <ion-header-bar class="bar-energized">
+        <h1 class="title">Login</h1>
+        <div class="buttons">
+            <!-- For Testing Only-->
+            <!--<button class="button button-clear ion-close" ng-click="closeLogin()"></button>-->
+        </div>
+    </ion-header-bar>
+    <ion-content>
+        <form name="loginForm" ng-submit="doLogin()">
+            <div class="list form-group">
+                <label class="item item-input">
+                    <span class="input-label">E-Mail: </span>
+                    <input required name="email" type="email" placeholder="E-Mail" ng-model="loginData.username">
+                </label>
+                <label class="alert alert-danger assertive" style="text-align: center"
+                     ng-show="loginForm.email.$error.required && loginForm.email.$dirty">
+                    Please enter your email!
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">Password: </span>
+                    <input class="login-form" required name="password" type="password" placeholder="Password" ng-model="loginData.password">
+                </label>
+                <label class="alert alert-danger assertive" style="text-align: center"
+                     ng-show="loginForm.password.$error.required && loginForm.password.$dirty">
+                    Please enter your password!
+                </label>
+                <ion-checkbox class="checkbox-energized" ng-model="loginData.remember" data-value="loginData.remember">Remember</ion-checkbox>
+                <label class="item">
+                    <button type="submit" ng-disabled="loginForm.$invalid" class="button button-block button-energized">Log in</button>
+                </label>
+                <label class="item" style="text-align: center">OR</label>
+                <label class="item">
+                    <button class="button button-block button-calm"  ng-click="goToRegister()">Register</button>
+                </label>
+            </div>
+        </form>
+    </ion-content>
+</ion-modal-view>
