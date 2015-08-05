@@ -2,7 +2,7 @@ angular.module('starter.controllers', [])
     .controller('AppCtrl', function ($scope, $state, $ionicModal, $timeout,
                                      $localstorage, Feels, Users, $rootScope,
                                      $ionicUser, $ionicPush, $http,
-                                     $ionicPopup, $ionicPopover, $ionicLoading) {
+                                     $ionicPopup, $ionicPopover, $ionicLoading, $ionicDeploy) {
 
         // Form data for the login modal
         $scope.loginData = {
@@ -24,6 +24,28 @@ angular.module('starter.controllers', [])
 
         //var FirebaseTokenGenerator = require("./firebase-token-generator-node.js");
         //var tokenGenerator = new FirebaseTokenGenerator("RHpXfUPsJX53UdV2sXk7yEe9Ebmcq89dtVkH9KEy");
+
+        // Update app code with new release from Ionic Deploy
+        $scope.doUpdate = function() {
+            $ionicDeploy.update().then(function(res) {
+                console.log('Ionic Deploy: Update Success! ', res);
+            }, function(err) {
+                console.log('Ionic Deploy: Update error! ', err);
+            }, function(prog) {
+                console.log('Ionic Deploy: Progress... ', prog);
+            });
+        };
+
+        // Check Ionic Deploy for new code
+        $scope.checkForUpdates = function() {
+            console.log('Ionic Deploy: Checking for updates');
+            $ionicDeploy.check().then(function(hasUpdate) {
+                console.log('Ionic Deploy: Update available: ' + hasUpdate);
+                $scope.hasUpdate = hasUpdate;
+            }, function(err) {
+                console.error('Ionic Deploy: Unable to check for updates', err);
+            });
+        };
 
         $scope.feels = Feels;
 
@@ -134,20 +156,29 @@ angular.module('starter.controllers', [])
             }
         };
 
+        ionic.Platform.ready(function(){
+            // will execute when device is ready, or immediately if the device is already ready.
+            console.log("Application Start...");
+            $scope.showLoading();
+            $scope.checkForUpdates();
+            if($scope.hasUpdate){
+                $scope.doUpdate();
+            }
+            $scope.hideLoading();
+        });
+
         // Create the login modal that we will use later
         $ionicModal.fromTemplateUrl('templates/login.html', {
             scope: $scope,
             animation: 'slide-in-up'
         }).then(function (modal) {
             $scope.loginModal = modal;
-            $scope.showLoading();
             $scope.login();
         });
 
         $scope.login = function () {
             $scope.loginModal.show();
             $timeout(function () {
-                $scope.hideLoading();
             }, 500);
         };
 
