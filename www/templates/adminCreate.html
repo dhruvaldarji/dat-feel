@@ -9,16 +9,20 @@
         <!--</div>-->
     </ion-header-bar>
     <ion-content>
-        <form ng-submit="postAdminFeel()">
+        <form name="adminCreateForm" ng-submit="postAdminFeel()">
             <div class="list">
                 <label class="item">
                     <textarea class="animate msd-elastic: \n;" minlength="1" maxlength="1500"
-                              placeholder="Post a Feel..." ng-required="true" style="width: 100%;"
+                              placeholder="Post an Admin Feel..." required name="post" style="width: 100%;"
                               ng-model="adminFeelsMessage.msg"></textarea>
+                </label>
+                <label class="alert alert-danger assertive" style="text-align: center"
+                       ng-show="adminCreateForm.post.$error.required && adminCreateForm.post.$dirty">
+                    Enter your Admin Feel!
                 </label>
                 <!--<label>{{adminFeelsMessage.msg}}</label>-->
                 <label class="item">
-                    <button class="button button-block button-positive" type="submit">Submit</button>
+                    <button ng-disabled="adminCreateForm.$invalid" class="button button-block button-energized" type="submit">Submit</button>
                 </label>
             </div>
         </form>

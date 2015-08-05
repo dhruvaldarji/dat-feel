@@ -32,27 +32,27 @@
 
                     <p style="font-size: smaller" class="row">
 
-                        <a ng-show="feel.feltBy.length == 0" class="col subdued">No Feels</a>
+                        <a ng-show="feel.feltBy.length == 0 || feel.feltBy == undefined" class="col subdued">No Feels</a>
                         <a ng-show="feel.feltBy.length == 1" class="col subdued">{{feel.feltBy.length}} Feel</a>
                         <a ng-show="feel.feltBy.length > 1" class="col subdued">{{feel.feltBy.length}} Feels</a>
 
-                        <a ng-show="feel.comments.length == 0" class="col subdued">No Comments</a>
+                        <a ng-show="feel.comments.length == 0 || feel.comments == undefined" class="col subdued">No Comments</a>
                         <a ng-show="feel.comments.length == 1" class="col subdued">{{feel.comments.length}} Comment</a>
                         <a ng-show="feel.comments.length  > 1" class="col subdued">{{feel.comments.length}} Comments</a>
                     </p>
                 </div>
-                <div class="item row">
+                <div class="item row row-center">
                     <a class="col tab-item" ng-show="hasFelt($index)" ng-click="feelingItUp($index)">
-                        <i style="font-size: medium" class="icon ion-heart-broken"> Feel </i>
+                        <i style="font-size: medium" class="icon ion-heart-broken assertive"> Unfeel </i>
                     </a>
                     <a class="col tab-item" ng-hide="hasFelt($index)" ng-click="feelingItUp($index)">
-                        <i style="font-size: medium" class="icon ion-heart"> Feel </i>
+                        <i style="font-size: medium" class="icon ion-heart energized"> Feel </i>
                     </a>
                     <a class="col tab-item" ng-click="comment($index)">
-                        <i style="font-size: medium" class="icon ion-chatbox"> Comment </i>
+                        <i style="font-size: medium" class="icon ion-chatbox energized"> Comment </i>
                     </a>
                     <a class="col tab-item" ng-show="currentUser == feel.user" ng-click="deleteFeel($index)">
-                        <i style="font-size: medium" class="icon ion-trash-b"> Delete </i>
+                        <i style="font-size: medium" class="icon ion-trash-b assertive"> Delete </i>
                     </a>
                 </div>
                 <br>

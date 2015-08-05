@@ -3,30 +3,30 @@
         <h1 class="title">Register</h1>
     </ion-header-bar>
     <ion-content>
-        <form>
-            <div class="list">
-                <label class="item item-input" ng-required="registerData.firstname">
-                    <span class="input-label">First Name:</span>
-                    <input type="text" ng-model="registerData.firstName">
-                </label>
-                <label class="item item-input" ng-required="registerData.lastname">
-                    <span class="input-label">Last Name: </span>
-                    <input type="text" ng-model="registerData.lastName">
-                </label>
-                <label class="item item-input" ng-required="registerData.username">
+        <form name="registerForm" ng-submit="doRegister()">
+            <div class="list form-group">
+                <label class="item item-input">
                     <span class="input-label">E-Mail: </span>
-                    <input type="email" ng-model="registerData.username">
+                    <input required name="email" type="email" placeholder="E-Mail" ng-model="loginData.username">
                 </label>
-                <label class="item item-input" ng-required="registerData.password">
+                <label class="alert alert-danger assertive" style="text-align: center;"
+                       ng-show="registerForm.email.$error.required && registerForm.email.$dirty">
+                    Please enter your email!
+                </label>
+                <label class="item item-input">
                     <span class="input-label">Password: </span>
-                    <input type="password" ng-model="registerData.password">
+                    <input class="login-form" required name="password" type="password" placeholder="Password" ng-model="loginData.password">
+                </label>
+                <label class="alert alert-danger assertive" style="text-align: center"
+                       ng-show="registerForm.password.$error.required && registerForm.password.$dirty">
+                    Please enter your password!
                 </label>
                 <label class="item">
-                    <button class="button button-block button-positive" ng-click="doRegister()">Register</button>
+                    <button type="submit" ng-disabled="registerForm.$invalid" class="button button-block button-energized">Register</button>
                 </label>
                 <label class="item" style="text-align: center">OR</label>
                 <label class="item">
-                    <button class="button button-block button-calm" ng-click="goToLogin()">Log in</button>
+                    <button class="button button-block button-calm"  ng-click="goToLogin()">Log In</button>
                 </label>
             </div>
         </form>

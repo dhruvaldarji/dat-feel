@@ -9,16 +9,20 @@
         <!--</div>-->
     </ion-header-bar>
     <ion-content>
-        <form ng-submit="postFeel()">
+        <form name="createForm" ng-submit="postFeel()">
             <div class="list">
                 <label class="item">
                     <textarea class="animate msd-elastic: \n;" minlength="1" maxlength="200"
-                              placeholder="Post a Feel..." ng-required="true" style="width: 100%;"
+                              placeholder="Post a Feel..." required name="post" style="width: 100%;"
                               ng-model="feelsMessage.msg"></textarea>
+                </label>
+                <label class="alert alert-danger assertive" style="text-align: center"
+                       ng-show="createForm.post.$error.required && createForm.post.$dirty">
+                    Enter your Feel!
                 </label>
                 <!--<label>{{feelsMessage.msg}}</label>-->
                 <label class="item">
-                    <button class="button button-block button-positive" type="submit">Submit</button>
+                    <button ng-disabled="createForm.$invalid" class="button button-block button-energized" type="submit">Submit</button>
                 </label>
             </div>
         </form>

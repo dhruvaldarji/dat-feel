@@ -33,16 +33,15 @@
                         Comments</a>
                 </p>
             </div>
-            <div class="item tabs tabs-secondary tabs-icon-left">
-                <a class="tab-item" ng-show="commentingFeel.feltBy.length === 0"
-                   ng-click="feelingItUp(commentingMessage.id)">
-                    <i class="icon ion-heart-broken"></i>
-                    Feel
+            <div class="row item">
+                <a class="tab-item col col-50" ng-show="hasFelt(commentingMessage.id)" ng-click="feelingItUp(commentingMessage.id)">
+                    <i style="font-size: medium" class="icon ion-heart-broken assertive"> Unfeel </i>
                 </a>
-                <a class="tab-item" ng-hide="commentingFeel.feltBy.length === 0"
-                   ng-click="feelingItUp(commentingMessage.id)">
-                    <i class="icon ion-heart"></i>
-                    Feel
+                <a class="tab-item col col-50" ng-hide="hasFelt(commentingMessage.id)" ng-click="feelingItUp(commentingMessage.id)">
+                    <i style="font-size: medium" class="icon ion-heart energized"> Feel </i>
+                </a>
+                <a class="tab-item col col-50" ng-show="currentUser == commentingFeel.user" ng-click="deleteFeel(commentingMessage.id)">
+                    <i style="font-size: medium" class="icon ion-trash-b assertive"> Delete </i>
                 </a>
             </div>
             <div class="item col-offset-5" ng-repeat="(id, comment) in commentingFeel.comments">
@@ -70,21 +69,23 @@
                         </a>
                     </div>
                 </div>
-
             </div>
         </ion-list>
+        <!--<label class="alert alert-danger assertive" style="text-align: center"-->
+               <!--ng-show="commentInput.commentArea.$error.required && commentInput.commentArea.$dirty">-->
+            <!--Please enter your Comment!-->
+        <!--</label>-->
     </ion-content>
-    <ion-footer-bar class="bar-energized item-input-inset message-footer" style="height: auto" keyboard-attach>
-        <label class="item-input-wrapper">
-                <textarea class="animate msd-elastic: \n;" minlength="1" maxlength="200"
-                          placeholder="Comment on this Feel..." ng-required="true" style="width: 100%;"
+    <ion-footer-bar class="bar-energized item-input-inset message-footer" ng-form="commentInput" ng-submit="commentOnFeel()" style="height: auto" keyboard-attach>
+            <label class="item-input-wrapper">
+                <textarea name="commentArea" required class="animate msd-elastic: \n;" minlength="1" maxlength="200"
+                          placeholder="Comment on this Feel..." style="width: 100%;"
                           ng-model="commentingMessage.msg">
                 </textarea>
-        </label>
-
-        <div class="footer-btn-wrap">
-            <button ng-show='commentingFeel.msg !== ""' class="button button-icon icon ion-paper-airplane footer-btn"
-                    ng-click="commentOnFeel()"></button>
-        </div>
+            </label>
+            <div class="footer-btn-wrap">
+                <button ng-disabled="commentInput.$invalid" class="button button-icon icon ion-paper-airplane footer-btn"
+                        type="submit"></button>
+            </div>
     </ion-footer-bar>
 </ion-modal-view>

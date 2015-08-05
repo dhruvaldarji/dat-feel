@@ -98,8 +98,11 @@ angular.module('starter.controllers', [])
                 title: title,
                 template: template
             });
+            var ret = false;
             alertPopup.then(function (res) {
-                console.log("Error: " + error);
+                //console.log("Error: " + template);
+                //console.log("Alert: ", res);
+                return res;
             });
         };
 
@@ -249,39 +252,42 @@ angular.module('starter.controllers', [])
         // Perform the register action when the user submits the register form
         $scope.doRegister = function () {
             $scope.showLoading();
-            console.log('Registering', $scope.registerData);
+            console.log('Registering', $scope.loginData);
             ref.createUser({
-                email: $scope.registerData.username,
-                password: $scope.registerData.password
+                email: $scope.loginData.username,
+                password: $scope.loginData.password
             }, function (error, userData) {
                 if (error) {
                     switch (error.code) {
                         case "EMAIL_TAKEN":
-                            console.log("The new user account cannot be created because the email is already in use.");
+                            console.log("Register Error: The new user account cannot be created because the email is already in use.");
+                            $scope.showAlert("Register Error", "The new user account cannot be created because the email is already in use.");
                             break;
                         case "INVALID_EMAIL":
-                            console.log("The specified email is not a valid email.");
+                            console.log("Register Error: The specified email is not a valid email.");
+                            $scope.showAlert("Register Error", "The specified email is not a valid email.");
                             break;
                         default:
-                            console.log("Error creating user:", error);
+                            console.log("Register Error: ", error);
+                            $scope.showAlert("Register Error", error)
                     }
                 } else {
                     remember: "sessionOnly";
+                    $scope.hideLoading();
                     console.log("Successfully created user account with uid:", userData.uid);
-
-                    // Simulate a register delay. Remove this and replace with your login
-                    // code if using a login system
+                    $scope.showAlert("Register Success", "Successfully created user account with uid: " + userData.uid);
                     $timeout(function () {
                         $scope.closeRegister();
+                        $scope.showLoading();
                         $scope.login();
                     }, 1000);
                 }
             });
 
-            $scope.registerData = {
-                username: "",
-                password: ""
-            };
+            //$scope.loginData = {
+            //    username: "",
+            //    password: ""
+            //};
             $scope.hideLoading();
         };
 
