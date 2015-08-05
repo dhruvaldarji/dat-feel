@@ -72,11 +72,12 @@
             </div>
         </ion-list>
         <!--<label class="alert alert-danger assertive" style="text-align: center"-->
-               <!--ng-show="commentInput.commentArea.$error.required && commentInput.commentArea.$dirty">-->
+               <!--ng-show="commentForm.commentArea.$error.required && commentForm.commentArea.$dirty">-->
             <!--Please enter your Comment!-->
         <!--</label>-->
     </ion-content>
-    <ion-footer-bar class="bar-energized item-input-inset message-footer" ng-form="commentInput" ng-submit="commentOnFeel()" style="height: auto" keyboard-attach>
+    <ion-footer-bar class="bar-energized item-input-inset message-footer" ng-form="commentForm" name="commentForm"
+                    style="height: auto">
             <label class="item-input-wrapper">
                 <textarea name="commentArea" required class="animate msd-elastic: \n;" minlength="1" maxlength="200"
                           placeholder="Comment on this Feel..." style="width: 100%;"
@@ -84,8 +85,8 @@
                 </textarea>
             </label>
             <div class="footer-btn-wrap">
-                <button ng-disabled="commentInput.$invalid" class="button button-icon icon ion-paper-airplane footer-btn"
-                        type="submit"></button>
+                <button ng-disabled="commentForm.$invalid" class="button button-icon icon ion-paper-airplane footer-btn"
+                        type="submit" ng-submit="" ng-click="commentOnFeel()"></button>
             </div>
     </ion-footer-bar>
 </ion-modal-view>

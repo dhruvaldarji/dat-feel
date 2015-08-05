@@ -82,10 +82,10 @@ angular.module('starter.controllers', [])
             confirmPopup.then(function (res) {
                 $scope.isConfirmed = res;
                 if (res) {
-                    console.log('Confirmed');
+                    //console.log('Confirmed');
                     //$scope.confirmSuccess();
                 } else {
-                    console.log('Not Confirmed');
+                    //console.log('Not Confirmed');
                     //$scope.confirmFail();
                 }
                 return res;
@@ -114,12 +114,12 @@ angular.module('starter.controllers', [])
             };
 
             if (!$scope.loggedIn) {
-                console.log("No one is logged in, checking local storage.");
+                //console.log("No one is logged in, checking local storage.");
 
                 var loginInfo = $localstorage.getObject('loginData').loginData;
-                console.log("Localstorage: ", loginInfo);
-                if (loginInfo == undefined|| loginInfo.username == undefined) {
-                    console.log("No login is saved, please login with email and password.");
+                //console.log("Localstorage: ", loginInfo);
+                if (loginInfo == undefined || loginInfo.username == undefined) {
+                    //console.log("No login is saved, please login with email and password.");
                     $scope.loginData = {
                         username: "",
                         password: "",
@@ -158,7 +158,7 @@ angular.module('starter.controllers', [])
         // Perform the login action when the user submits the login form
         // Reference:     https://www.firebase.com/docs/web/guide/login/password.html
         $scope.doLogin = function () {
-            console.log('Doing login', $scope.loginData);
+            //console.log('Doing login', $scope.loginData);
             $scope.showLoading();
 
             ref.authWithPassword({
@@ -166,18 +166,18 @@ angular.module('starter.controllers', [])
                 password: $scope.loginData.password
             }, function (error, authData) {
                 if (error) {
-                    console.log("Login Failed: ", error);
+                    //console.log("Login Failed: ", error);
                     // An alert dialog
                     $scope.showAlert('Login Failed', error);
                     $scope.loggedIn = false;
                 } else {
-                    console.log("Successfully logged in account with username:", authData.password.email);
+                    //console.log("Successfully logged in account with username:", authData.password.email);
                     $scope.currentUser = authData.password.email;
                     $scope.loggedIn = true;
 
                     // An alert dialog
                     //$scope.showAlert('Login Success', "Logged in as " +$scope.currentUser);
-                    console.log("Logged in as " + $scope.currentUser);
+                    //console.log("Logged in as " + $scope.currentUser);
 
                     // Identify user with Ionic for
                     $scope.identifyUser();
@@ -206,14 +206,14 @@ angular.module('starter.controllers', [])
                             });
                         }
                     }
-                    if($scope.loggedIn) $scope.closeLogin();
+                    if ($scope.loggedIn) $scope.closeLogin();
                     $scope.hideLoading();
                 }, 1000);
             });
         };
 
         $scope.doLogout = function () {
-            console.log('Doing Logout');
+            //console.log('Doing Logout');
             $scope.showLoading();
             $timeout(function () {
                 $scope.loggedIn = false;
@@ -252,7 +252,7 @@ angular.module('starter.controllers', [])
         // Perform the register action when the user submits the register form
         $scope.doRegister = function () {
             $scope.showLoading();
-            console.log('Registering', $scope.loginData);
+            //console.log('Registering', $scope.loginData);
             ref.createUser({
                 email: $scope.loginData.username,
                 password: $scope.loginData.password
@@ -260,21 +260,21 @@ angular.module('starter.controllers', [])
                 if (error) {
                     switch (error.code) {
                         case "EMAIL_TAKEN":
-                            console.log("Register Error: The new user account cannot be created because the email is already in use.");
+                            //console.log("Register Error: The new user account cannot be created because the email is already in use.");
                             $scope.showAlert("Register Error", "The new user account cannot be created because the email is already in use.");
                             break;
                         case "INVALID_EMAIL":
-                            console.log("Register Error: The specified email is not a valid email.");
+                            //console.log("Register Error: The specified email is not a valid email.");
                             $scope.showAlert("Register Error", "The specified email is not a valid email.");
                             break;
                         default:
-                            console.log("Register Error: ", error);
+                            //console.log("Register Error: ", error);
                             $scope.showAlert("Register Error", error)
                     }
                 } else {
                     remember: "sessionOnly";
                     $scope.hideLoading();
-                    console.log("Successfully created user account with uid:", userData.uid);
+                    //console.log("Successfully created user account with uid:", userData.uid);
                     $scope.showAlert("Register Success", "Successfully created user account with uid: " + userData.uid);
                     $timeout(function () {
                         $scope.closeRegister();
@@ -294,7 +294,7 @@ angular.module('starter.controllers', [])
         // Handles incoming device tokens
         $rootScope.$on('$cordovaPush:tokenReceived', function (event, data) {
             //alert("Successfully registered token " + data.pushToken);
-            console.log('Ionic Push: Got token ', data.token, data.platform);
+            //console.log('Ionic Push: Got token ', data.token, data.platform);
             $scope.pushToken = data.token;
             $scope.pushPlatform = data.platform;
 
@@ -302,28 +302,28 @@ angular.module('starter.controllers', [])
             var userFound = false;
             for (var i = 0; i < $scope.users.length; i++) {
                 if ($scope.currentUser === $scope.users[i].username) {
-                    console.log("User found in DB.");
+                    //console.log("User found in DB.");
                     userFound = true;
 
                     //check if isAdmin
-                    console.log("User: ", $scope.users[i]);
+                    //console.log("User: ", $scope.users[i]);
                     if ($scope.users[i].isAdmin) {
                         $scope.isAdmin = true;
-                        console.log("User is Admin");
+                        //console.log("User is Admin");
                     }
                     else {
-                        console.log("User is not Admin");
+                        //console.log("User is not Admin");
                         $scope.isAdmin = false;
                     }
 
-                    console.log("Setting user deviceToken");
+                    //console.log("Setting user deviceToken");
                     $scope.users[i].deviceToken = $scope.pushToken;
                     $scope.users.$save(i);
                     break;
                 }
             }
             if (!userFound) {
-                console.log("User not Found. Adding user to DB");
+                //console.log("User not Found. Adding user to DB");
                 $scope.users.$add({
                     "username": $scope.currentUser,
                     "deviceToken": $scope.pushToken
@@ -334,7 +334,7 @@ angular.module('starter.controllers', [])
 
         // Identifies a user with the Ionic User service
         $scope.identifyUser = function () {
-            console.log('Ionic User: Identifying with Ionic User service');
+            //console.log('Ionic User: Identifying with Ionic User service');
 
             var user = $ionicUser.get();
             if (!user.user_id) {
@@ -353,45 +353,45 @@ angular.module('starter.controllers', [])
             // Identify your user with the Ionic User Service
             $ionicUser.identify(user).then(function () {
                 $scope.identified = true;
-                console.log('Identified user ' + user.name + '\n ID ' + user.user_id);
+                //console.log('Identified user ' + user.name + '\n ID ' + user.user_id);
                 //alert('Identified user ' + user.name + '\n ID ' + user.user_id);
             });
         };
 
         // Registers a device for push notifications and stores its token
         $scope.pushRegister = function () {
-            console.log('Ionic Push: Registering user');
+            //console.log('Ionic Push: Registering user');
 
             // Register with the Ionic Push service.  All parameters are optional.
             $ionicPush.register({
-                canShowAlert: true, //Can pushes show an alert on your screen?
+                canShowAlert: false, //Can pushes show an alert on your screen?
                 canSetBadge: true, //Can pushes update app icon badges?
                 canPlaySound: true, //Can notifications play a sound?
                 canRunActionsOnWake: true, //Can run actions outside the app,
                 onNotification: function (notification) {
                     // Handle new push notifications here
-                    console.log("Notification ",notification);
+                    //console.log("Notification ",notification);
                     $scope.showAlert("Notification", notification.alert);
                     return true;
                 }
             });
-            console.log("Submitted Register Request.");
+            //console.log("Submitted Register Request.");
             $scope.registered = true;
         };
 
-        // Create the login modal that we will use later
+        // Create the create modal that we will use later
         $ionicModal.fromTemplateUrl('templates/create.html', {
             scope: $scope
         }).then(function (modal) {
             $scope.createModal = modal;
         });
 
-        // Triggered in the login modal to close it
+        // Triggered in the create modal to close it
         $scope.closeCreate = function () {
             $scope.createModal.hide();
         };
 
-        // Open the login modal
+        // Open the create modal
         $scope.Create = function () {
             $scope.createModal.show();
         };
@@ -401,7 +401,7 @@ angular.module('starter.controllers', [])
             // Post message using user, message, and time.
             var PostFeelMessage = "DFW " + $scope.feelsMessage.msg;
             var date = new Date();
-            console.log("Posting: " + PostFeelMessage + " on " + date);
+            //console.log("Posting: " + PostFeelMessage + " on " + date);
             if ($scope.loggedIn && PostFeelMessage) {
                 $scope.feels.$add({
                     "user": $scope.currentUser,
@@ -414,7 +414,7 @@ angular.module('starter.controllers', [])
                 //list of all tokens
                 var allTokens = [];
 
-                console.log("Adding all user tokens for push");
+                //console.log("Adding all user tokens for push");
                 for (var i = 0; i < $scope.users.length; i++) {
                     if ($scope.users[i].username !== $scope.currentUser) {
                         allTokens.push($scope.users[i].deviceToken);
@@ -424,7 +424,7 @@ angular.module('starter.controllers', [])
                 var data = {
                     "tokens": allTokens,
                     "notification": {
-                        "alert": $scope.currentUser + ":\n"+PostFeelMessage,
+                        "alert": $scope.currentUser + ":\n" + PostFeelMessage,
                         "ios": {
                             "badge": 1,
                             "sound": "ping.aiff",
@@ -459,12 +459,12 @@ angular.module('starter.controllers', [])
                 }).success(function (data, status, headers, config) {
                     // this callback will be called asynchronously
                     // when the response is available
-                    console.log("Data Pushed!!!", data, status, headers, config)
+                    //console.log("Data Pushed!!!", data, status, headers, config);
                 }).
                     error(function (data, status, headers, config) {
                         // called asynchronously if an error occurs
                         // or server returns response with an error status.
-                        console.log("Data not pushed: ", data, status, headers, config)
+                        //console.log("Data not pushed: ", data, status, headers, config);
                     });
             }
             $scope.feelsMessage = {
@@ -490,9 +490,9 @@ angular.module('starter.controllers', [])
                     template: "Are you sure you want to delete DFW #" + num + "."
                 });
                 confirmPopup.then(function (res) {
-                    console.log('Confirmed', res);
+                    //console.log('Confirmed', res);
                     if (res) {
-                        console.log("User: " + userDeleting + ", is deleting DFW " + num + ".");
+                        //console.log("User: " + userDeleting + ", is deleting DFW " + num + ".");
                         $scope.feels.$remove(num);
                     } else {
                         //console.log('Cancelled');
@@ -501,7 +501,7 @@ angular.module('starter.controllers', [])
                 });
             }
             else {
-                console.log("User: " + $scope.currentUser + " does not have permission to delete DFW " + num + ".");
+                //console.log("User: " + $scope.currentUser + " does not have permission to delete DFW " + num + ".");
             }
         };
 
@@ -510,14 +510,14 @@ angular.module('starter.controllers', [])
             var add = true;
             var num = $scope.feels.length - id - 1;
 
-            console.log("User: "+$scope.currentUser+", is feeling up DFW #"+num+".");
+            //console.log("User: "+$scope.currentUser+", is feeling up DFW #"+num+".");
             //alert("User: "+$scope.currentUser+" is feeling up DFW #"+num+".");
 
             var currentFeel = $scope.feels[num];
             var currentUserNum = -1;
             if ((typeof(currentFeel) !== 'undefined') && (currentFeel.feltBy)) {
                 var numFelt = currentFeel.feltBy.length;
-                console.log("The feel has " + numFelt + " feel(s).");
+                //console.log("The feel has " + numFelt + " feel(s).");
                 for (var i = 0; i < numFelt; i++) {
                     if (currentFeel.feltBy[i] === $scope.currentUser) {
                         add = false;
@@ -545,7 +545,7 @@ angular.module('starter.controllers', [])
             }
         };
 
-        $scope.hasFelt = function(id){
+        $scope.hasFelt = function (id) {
             var num = $scope.feels.length - id - 1;
 
             var currentFeel = $scope.feels[num];
@@ -579,7 +579,7 @@ angular.module('starter.controllers', [])
             $scope.commentingMessage.id = id;
             $scope.commentingFeel = $scope.feels[num];
             $scope.commentingMessage.index = num;
-            console.log("Opening Comment Modal for Feel #", $scope.commentingMessage.index, " with ID ", $scope.commentingMessage.id);
+            //console.log("Opening Comment Modal for Feel #", $scope.commentingMessage.index, " with ID ", $scope.commentingMessage.id);
             $scope.commentModal.show();
         };
 
@@ -588,11 +588,15 @@ angular.module('starter.controllers', [])
             //console.log("User: "+$scope.currentUser+", is commenting on DFW #"+$scope.commentingMessage.index+".");
             //alert("User: "+$scope.currentUser+" is commenting on DFW #"+$scope.commentingMessage.index+".");
             var currentFeel = $scope.feels[$scope.commentingMessage.index];
-            if($scope.commentingMessage.msg != ""){
+            if ($scope.commentingMessage.msg != "") {
                 if ((typeof(currentFeel) !== 'undefined') && (currentFeel.comments)) {
                     var numCommented = $scope.commentingFeel.comments.length;
                     //console.log("The feel has " + numCommented + " comment(s).")
-                    currentFeel.comments.push({user: $scope.currentUser, comment: $scope.commentingMessage.msg, date: (new Date()).toLocaleString()});
+                    currentFeel.comments.push({
+                        user: $scope.currentUser,
+                        comment: $scope.commentingMessage.msg,
+                        date: (new Date()).toLocaleString()
+                    });
                     $scope.feels.$save($scope.commentingMessage.index);
                     //alert("User: "+$scope.currentUser+" is commenting on DFW #"+$scope.commentingMessage.index+".");
                 }
@@ -621,10 +625,10 @@ angular.module('starter.controllers', [])
                     template: "Are you sure you want to delete this comment?"
                 });
                 confirmPopup.then(function (res) {
-                    console.log('Confirmed', res);
+                    //console.log('Confirmed', res);
                     if (res) {
                         //console.log("User: " + userDeleting + ", is deleting comment " + id + "of DFW " + num + ".");
-                        $scope.feels[num].comments.splice(id,1);
+                        $scope.feels[num].comments.splice(id, 1);
                         $scope.feels.$save(num);
                     } else {
                         //console.log('Cancelled');
@@ -667,7 +671,7 @@ angular.module('starter.controllers', [])
             // Post message using user, message, and time.
             var PostFeelMessage = $scope.adminFeelsMessage.msg;
             var date = new Date();
-            console.log("Posting: " + PostFeelMessage + " on " + date);
+            //console.log("Posting: " + PostFeelMessage + " on " + date);
             if ($scope.loggedIn && PostFeelMessage) {
                 $scope.feels.$add({
                     "user": $scope.currentUser,
@@ -690,7 +694,7 @@ angular.module('starter.controllers', [])
                 var data = {
                     "tokens": allTokens,
                     "notification": {
-                        "alert": "Message From Admin: \n"+PostFeelMessage,
+                        "alert": "Message From Admin: \n" + PostFeelMessage,
                         "ios": {
                             "badge": 1,
                             "sound": "ping.aiff",
@@ -725,14 +729,12 @@ angular.module('starter.controllers', [])
                 }).success(function (data, status, headers, config) {
                     // this callback will be called asynchronously
                     // when the response is available
-                    console.log("Data Pushed!!!", data, status, headers, config)
-                }).
-                    error(function (data, status, headers, config) {
+                    //("Data Pushed!!!", data, status, headers, config)
+                }).error(function (data, status, headers, config) {
                         // called asynchronously if an error occurs
                         // or server returns response with an error status.
-                        console.log("Data not pushed: ", data, status, headers, config)
-                    });
-
+                        //console.log("Data not pushed: ", data, status, headers, config)
+                 });
             }
             $scope.adminFeelsMessage = {
                 msg: "",
@@ -742,72 +744,13 @@ angular.module('starter.controllers', [])
                 feltBy: [],
                 comments: []
             };
-
-            //list of all tokens
-            var allTokens = [];
-
-            ////console.log("Adding all user tokens for push");
-            for (var i = 0; i < $scope.users.length; i++) {
-                if ($scope.users[i].username !== $scope.currentUser) {
-                    allTokens.push($scope.users[i].deviceToken);
-                }
-            }
-
-            //Test Push on Dhruval
-            //allTokens.push("92b3476b085b92324d5b98b1e89d67b4730f67cb11d327c6d8813589b470e7cd");
-
-            var data = {
-                "tokens": allTokens,
-                "notification": {
-                    "alert": "Message From Admin: \n"+PostFeelMessage,
-                    "ios": {
-                        "badge": 1,
-                        "sound": "ping.aiff",
-                        "expiry": 1423238641,
-                        "priority": 10,
-                        "contentAvailable": true,
-                        "payload": {
-                            "key1": "Message From Admins",
-                            "key2": PostFeelMessage
-                        }
-                    },
-                    "android": {
-                        "collapseKey": "foo",
-                        "delayWhileIdle": true,
-                        "timeToLive": 300,
-                        "payload": {
-                            "key1": "value",
-                            "key2": "value"
-                        }
-                    }
-                }
-            };
-
-            var privateAPIKey = window.btoa("4f9d0ac7d03bb78f24ef5b63cbbe89e70dff090aeb2f027b");
-
-            $http.post('https://push.ionic.io/api/v1/push', data, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Ionic-Application-Id': '45ec6dc0',
-                    'Authorization': "Basic " + privateAPIKey
-                }
-            }).success(function (data, status, headers, config) {
-                // this callback will be called asynchronously
-                // when the response is available
-                console.log("Data Pushed!!!", data, status, headers, config)
-            }).
-                error(function (data, status, headers, config) {
-                    // called asynchronously if an error occurs
-                    // or server returns response with an error status.
-                    console.log("Data not pushed: ", data, status, headers, config)
-                });
         };
 
         $scope.testSingleTokenMsg = {
             token: $scope.pushToken,
             msg: "Testing Push"
         };
-        $scope.testSinglePushToToken = function(){
+        $scope.testSinglePushToToken = function () {
             var data = {
                 "tokens": $scope.testSingleTokenMsg.token,
                 "notification": {
@@ -819,8 +762,8 @@ angular.module('starter.controllers', [])
                         "priority": 10,
                         "contentAvailable": true,
                         "payload": {
-                            "key1": "value",
-                            "key2": "value"
+                            "key1": "Message For Single Token",
+                            "key2": $scope.testSingleTokenMsg.msg
                         }
                     },
                     "android": {
@@ -828,8 +771,8 @@ angular.module('starter.controllers', [])
                         "delayWhileIdle": true,
                         "timeToLive": 300,
                         "payload": {
-                            "key1": "value",
-                            "key2": "value"
+                            "key1": "Message For Single Token",
+                            "key2": $scope.testSingleTokenMsg.msg
                         }
                     }
                 }
@@ -846,13 +789,12 @@ angular.module('starter.controllers', [])
             }).success(function (data, status, headers, config) {
                 // this callback will be called asynchronously
                 // when the response is available
-                console.log("Data Pushed!!!", data, status, headers, config)
-            }).
-                error(function (data, status, headers, config) {
-                    // called asynchronously if an error occurs
-                    // or server returns response with an error status.
-                    console.log("Data not pushed: ", data, status, headers, config)
-                });
+                //console.log("Data Pushed!!!", data, status, headers, config)
+            }).error(function (data, status, headers, config) {
+                // called asynchronously if an error occurs
+                // or server returns response with an error status.
+                //console.log("Data not pushed: ", data, status, headers, config)
+            });
         }
 
     })
