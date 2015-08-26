@@ -21330,7 +21330,7 @@ var ngControllerDirective = [function() {
 
           beforeEach(function() {
             util = require('util');
-            webdriver = require('protractor/node_modules/selenium-webdriver');
+            webdriver = require('protractor/node_modules_/selenium-webdriver');
           });
 
           // For now, we only test on Chrome,
