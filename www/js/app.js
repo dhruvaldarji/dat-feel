@@ -4,8 +4,8 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic','ionic.service.core','ionic.service.deploy', 'firebase', 'ngCordova', 'monospaced.elastic', 
-    'ionic.service.analytics', 'ionic.service.push', 'starter.controllers'])
+angular.module('dat-feel', ['ionic','ionic.service.core','ionic.service.push','ngCordova', 'firebase',  'monospaced.elastic',
+    'ionic.service.analytics',  'dat-feel.controllers'])
 
     .run(function ($ionicPlatform, $ionicAnalytics) {
         $ionicPlatform.ready(function () {
@@ -32,7 +32,7 @@ angular.module('starter', ['ionic','ionic.service.core','ionic.service.deploy', 
             // The public API key all services will use for this app
             api_key: '23388e70ab4483be754cf84fe8220d9e49baa88c48f5dad4',
             // The GCM project number
-            gcm_id: '94195404193',
+            gcm_key: '94195404193',
             // Set the app to use development pushes
             dev_push: true
         });
