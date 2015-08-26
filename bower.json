@@ -7,6 +7,5 @@
     "ionic-service-core": "~0.1.10",
     "ionic-service-push": "~0.1.13",
     "ionic-service-analytics": "~0.1.2",
-    "ionic-service-deploy": "~0.1.3"
   }
 }

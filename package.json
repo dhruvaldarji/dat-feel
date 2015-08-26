@@ -17,8 +17,6 @@
   "cordovaPlugins": [
     "com.ionic.keyboard",
     {
-      "locator": "https://github.com/driftyco/ionic-plugins-deploy",
-      "id": "com.ionic.deploy"
     }
   ],
   "cordovaPlatforms": [
